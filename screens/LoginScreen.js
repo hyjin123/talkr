@@ -47,35 +47,42 @@ const LoginScreen = () => {
   };
 
   return (
-    <SafeAreaView style={tw`flex-1 justify-center items-center`}>
-      <View style={tw`w-80`}>
-        <TextInput
-          style={tw`text-lg bg-white px-2 py-2 rounded-lg mt-2`}
-          placeholder="Email"
-          value={email}
-          onChangeText={(text) => setEmail(text)}
-        />
-        <TextInput
-          style={tw`text-lg bg-white px-2 py-2 rounded-lg mt-2`}
-          placeholder="Password"
-          secureTextEntry
-          value={password}
-          onChangeText={(text) => setPassword(text)}
-        />
+    <SafeAreaView style={tw`flex-1 justify-evenly items-center`}>
+      <View>
+        <Text style={tw`font-mono text-6xl tracking-widest font-light`}>
+          talkr
+        </Text>
       </View>
-      <View style={tw`w-60 justify-center items-center mt-5`}>
-        <TouchableOpacity
-          onPress={handleLogin}
-          style={tw`w-40 bg-blue-200 p-4 m-1 rounded-lg`}
-        >
-          <Text style={tw`text-center`}>Login</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={handleSignUp}
-          style={tw`w-40 bg-blue-200 p-4 m-1 rounded-lg`}
-        >
-          <Text style={tw`text-center`}>Register</Text>
-        </TouchableOpacity>
+      <View>
+        <View style={tw`w-75`}>
+          <TextInput
+            style={tw`border-b-2 border-gray-400 text-lg bg-transparent py-2 mt-2`}
+            placeholder="Email"
+            value={email}
+            onChangeText={(text) => setEmail(text)}
+          />
+          <TextInput
+            style={tw`border-b-2 border-gray-400 text-lg bg-transparent py-2 mt-2`}
+            placeholder="Password"
+            secureTextEntry
+            value={password}
+            onChangeText={(text) => setPassword(text)}
+          />
+        </View>
+        <View style={tw`justify-center items-center mt-5`}>
+          <TouchableOpacity
+            onPress={handleLogin}
+            style={tw`w-70 bg-[#fff9bb] p-4 m-1 rounded-full`}
+          >
+            <Text style={tw`font-mono text-center font-bold`}>LOGIN</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={handleSignUp}
+            style={tw`w-70 bg-[#fff9bb] p-4 m-1 rounded-full`}
+          >
+            <Text style={tw`font-mono text-center font-bold`}>REGISTER</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </SafeAreaView>
   );

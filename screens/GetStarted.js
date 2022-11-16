@@ -34,7 +34,7 @@ const GetStarted = () => {
           iterationCount={1}
           style={tw`text-4xl my-2 text-black font-semibold text-left`}
         >
-          It's so easy talking to your friends with Talkr
+          It's so easy talking to your friends with talkr
         </Animatable.Text>
         <Animatable.Text
           animation="slideInUp"
