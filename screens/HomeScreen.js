@@ -12,6 +12,7 @@ import { auth, db } from "../firebase";
 import { useNavigation } from "@react-navigation/core";
 import { useCollection } from "react-firebase-hooks/firestore";
 import Modal from "react-native-modal";
+import * as EmailValidator from "email-validator";
 import {
   PlusIcon,
   MagnifyingGlassIcon,
@@ -21,6 +22,7 @@ import {
 
 const HomeScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [addedEmail, setAddedEmail] = useState("");
 
   const navigation = useNavigation();
 
@@ -47,7 +49,33 @@ const HomeScreen = () => {
   };
 
   // user submits add a friend
-  const handleAdd = () => {
+  // get a chat collection snapchat from firebase
+  const [chatsSnapshot] = useCollection(
+    db.collection("chats").where("users", "array-contains", loggedInUserEmail)
+  );
+
+  // console.log(chatsSnapshot?.docs?.[0]?.data());
+
+  // check to see if the chat collection already exists in the database
+  const doesChatExist = (addedEmail) => {
+    return !!chatsSnapshot?.docs.find(
+      (chat) =>
+        chat.data().users.find((user) => user === addedEmail)?.length > 0
+    );
+  };
+
+  const creatChat = () => {
+    // check to see if email is in correct format
+    if (
+      EmailValidator.validate(addedEmail) &&
+      addedEmail !== loggedInUserEmail &&
+      !doesChatExist(addedEmail)
+    ) {
+      db.collection("chats").add({
+        users: [loggedInUserEmail, addedEmail],
+      });
+    }
+    setAddedEmail("");
     setModalVisible(false);
   };
 
@@ -65,9 +93,12 @@ const HomeScreen = () => {
           <TextInput
             placeholder="Enter Email"
             placeholderTextColor="gray"
+            value={addedEmail}
+            onChangeText={(text) => setAddedEmail(text)}
             style={tw`border-2 rounded-full py-1 w-50 p-2 mt-3`}
           />
           <TouchableOpacity
+            onPress={creatChat}
             style={tw`bg-[#fff9bb] font-bold rounded-full px-15 py-2 mt-6`}
           >
             <Text style={tw`text-black`}>ADD</Text>
