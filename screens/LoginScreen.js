@@ -7,82 +7,37 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import tw from "twrnc";
-import { auth } from "../firebase";
-import { useNavigation } from "@react-navigation/core";
+import LoginTab from "../components/LoginTab";
+import RegisterTab from "../components/RegisterTab";
 
 const LoginScreen = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const navigation = useNavigation();
-
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (user) {
-        navigation.replace("Home");
-      }
-    });
-
-    return unsubscribe;
-  }, []);
-
-  const handleSignUp = () => {
-    auth
-      .createUserWithEmailAndPassword(email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        console.log(user);
-      })
-      .catch((error) => alert(error.message));
-  };
-
-  const handleLogin = () => {
-    auth
-      .signInWithEmailAndPassword(email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        console.log(user.email);
-      })
-      .catch((error) => alert(error.message));
-  };
+  const [selectedTab, setSelectedTab] = useState("register");
 
   return (
     <SafeAreaView style={tw`flex-1 justify-evenly items-center`}>
       <View>
-        <Text style={tw`font-mono text-6xl tracking-widest font-light`}>
-          talkr
-        </Text>
+        <Text style={tw`text-6xl tracking-widest font-light`}>talkr</Text>
       </View>
       <View>
-        <View style={tw`w-75`}>
-          <TextInput
-            style={tw`border-b-2 border-gray-400 text-lg bg-transparent py-2 mt-2`}
-            placeholder="Email"
-            value={email}
-            onChangeText={(text) => setEmail(text)}
-          />
-          <TextInput
-            style={tw`border-b-2 border-gray-400 text-lg bg-transparent py-2 mt-2`}
-            placeholder="Password"
-            secureTextEntry
-            value={password}
-            onChangeText={(text) => setPassword(text)}
-          />
-        </View>
-        <View style={tw`justify-center items-center mt-5`}>
+        <View style={tw`flex-row justify-evenly items-center mb-5`}>
           <TouchableOpacity
-            onPress={handleLogin}
-            style={tw`w-70 bg-[#fff9bb] p-4 m-1 rounded-full`}
+            style={tw`${
+              selectedTab === "login" && "border-b-2 border-gray-600"
+            } p-3`}
+            onPress={() => setSelectedTab("login")}
           >
-            <Text style={tw`font-mono text-center font-bold`}>LOGIN</Text>
+            <Text>LOGIN</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={handleSignUp}
-            style={tw`w-70 bg-[#fff9bb] p-4 m-1 rounded-full`}
+            style={tw`${
+              selectedTab === "register" && "border-b-2 border-gray-600"
+            } p-3`}
+            onPress={() => setSelectedTab("register")}
           >
-            <Text style={tw`font-mono text-center font-bold`}>REGISTER</Text>
+            <Text>REGISTER</Text>
           </TouchableOpacity>
         </View>
+        {selectedTab === "register" ? <RegisterTab /> : <LoginTab />}
       </View>
     </SafeAreaView>
   );
