@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Button,
   Image,
+  Alert,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import tw from "twrnc";
@@ -20,21 +21,45 @@ const RegisterTab = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [image, setImage] = useState(null);
+  const [uploading, setUploading] = useState(false);
+  const [imageURL, setImageURL] = useState("");
 
   const navigation = useNavigation();
 
   // user picking an image for their avatar
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [1, 1],
       quality: 1,
     });
 
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
+    // if (!result.canceled) {
+    //   setImage(result.assets[0].uri);
+    // }
+
+    const source = { uri: result.assets[0].uri };
+    setImage(source);
+  };
+
+  // users upload an image, and can confirm. After confirmation, it uploads it to firestore storage
+  const uploadImage = async () => {
+    setUploading(true);
+    const response = await fetch(image.uri);
+    const blob = await response.blob();
+    const filename = image.uri.substring(image.uri.lastIndexOf("/") + 1);
+    setImageURL(filename);
+    let ref = firebase.storage().ref().child(filename).put(blob);
+
+    try {
+      await ref;
+    } catch (e) {
+      console.log(e);
     }
+    setUploading(false);
+    Alert.alert("Photo successfully uploaded!");
+    setImage(null);
   };
 
   useEffect(() => {
@@ -61,7 +86,7 @@ const RegisterTab = () => {
               displayName: `${firstName} ${lastName}`,
               email: email,
               lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
-              photoURL: image,
+              photoURL: imageURL,
             },
             { merge: true }
           );
@@ -99,8 +124,12 @@ const RegisterTab = () => {
         />
         <Button title="Pick an image from camera roll" onPress={pickImage} />
         {image && (
-          <Image source={{ uri: image }} style={{ width: 50, height: 50 }} />
+          <Image
+            source={{ uri: image.uri }}
+            style={{ width: 50, height: 50 }}
+          />
         )}
+        <Button title="choose the image" onPress={uploadImage} />
       </View>
       <View style={tw`justify-center items-center mt-5`}>
         <TouchableOpacity

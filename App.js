@@ -4,6 +4,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import HomeScreen from "./screens/HomeScreen";
 import LoginScreen from "./screens/LoginScreen";
 import GetStarted from "./screens/GetStarted";
+import ChatScreen from "./screens/ChatScreen";
 import { KeyboardAvoidingView } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
@@ -31,6 +32,11 @@ export default function App() {
           <Stack.Screen
             name="Home"
             component={HomeScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Chat"
+            component={ChatScreen}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>
