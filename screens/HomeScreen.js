@@ -19,6 +19,7 @@ import {
   ArrowTopRightOnSquareIcon,
 } from "react-native-heroicons/solid";
 import FriendAvatar from "../components/FriendAvatar";
+import ChatPreview from "../components/ChatPreview";
 
 const HomeScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -87,7 +88,7 @@ const HomeScreen = () => {
         onBackdropPress={() => setModalVisible(false)}
       >
         <View
-          style={tw`flex-1 justify-center items-center bg-white my-80 mx-10 rounded-lg`}
+          style={tw`flex-1 justify-center items-center bg-white my-80 mx-10`}
         >
           <Text>Add a Friend</Text>
           <TextInput
@@ -95,7 +96,7 @@ const HomeScreen = () => {
             placeholderTextColor="gray"
             value={addedEmail}
             onChangeText={(text) => setAddedEmail(text)}
-            style={tw`border-2 rounded-full py-1 w-50 p-2 mt-3`}
+            style={tw`border-2 border-gray-300 rounded-full py-1 w-50 p-2 mt-3`}
           />
           <TouchableOpacity
             onPress={creatChat}
@@ -131,15 +132,17 @@ const HomeScreen = () => {
       </View>
 
       {/* Search Bar */}
-      <View style={tw`flex-row pl-3 pb-8 my-2 border-gray-100 border-b-2`}>
+      <View
+        style={tw`bg-white flex-row pl-3 pb-8 border-gray-100 rounded-br-3xl rounded-bl-3xl border-b-4 border-l-2 border-r-2 z-5`}
+      >
         <View style={tw`ml-2`}>
           <TouchableOpacity
             style={tw`w-15 h-15 justify-center items-center bg-gray-100 p-2 m-1 rounded-full border-2 border-gray-200`}
           >
-            <MagnifyingGlassIcon color="black" size={26} />
+            <MagnifyingGlassIcon color="gray" size={26} />
           </TouchableOpacity>
           <View style={tw`w-16 mt-1 justify-center items-center`}>
-            <Text>Search</Text>
+            <Text style={tw`font-light`}>Search</Text>
           </View>
         </View>
         {/* Loop through each existing chat and display friend's avatar and name beside the search bar */}
@@ -155,7 +158,22 @@ const HomeScreen = () => {
         </ScrollView>
       </View>
 
-      {/* Body */}
+      {/* Body - List of chat preview */}
+      <ScrollView
+        vertical
+        showsVerticalScrollIndicator={false}
+        style={tw`bg-gray-50 -mt-5 pt-6 h-100`}
+      >
+        {chatsSnapshot?.docs.map((chat) => (
+          <ChatPreview
+            key={chat.id}
+            id={chat.id}
+            users={chat.data().users}
+            loggedInUserEmail={loggedInUserEmail}
+          />
+        ))}
+      </ScrollView>
+
       {/* Tab Navigation */}
     </SafeAreaView>
   );

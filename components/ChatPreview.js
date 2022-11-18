@@ -1,12 +1,12 @@
-import { View, Text, ScrollView, TouchableOpacity, Image } from "react-native";
-import React from "react";
+import { View, Text, ScrollView, Image, TouchableOpacity } from "react-native";
 import { db } from "../firebase";
-import { UserIcon } from "react-native-heroicons/solid";
+import React from "react";
 import tw from "twrnc";
-import getFriendEmail from "../utils/getFriendEmail";
 import { useCollection } from "react-firebase-hooks/firestore";
+import { UserIcon } from "react-native-heroicons/solid";
+import getFriendEmail from "../utils/getFriendEmail";
 
-const FriendAvatar = ({ users, loggedInUserEmail }) => {
+const ChatPreview = ({ users, loggedInUserEmail }) => {
   // use the function that filters out your email and leaves only your friend's email
   const friendEmail = getFriendEmail(users, loggedInUserEmail);
 
@@ -19,9 +19,9 @@ const FriendAvatar = ({ users, loggedInUserEmail }) => {
   const friendName = friendSnapshot?.docs?.[0]?.data().displayName;
 
   return (
-    <>
-      <View style={tw`ml-2`}>
-        <TouchableOpacity
+    <TouchableOpacity style={tw`border-b-2 border-gray-100`}>
+      <View style={tw`flex-row justify-between items-center p-4`}>
+        <View
           style={tw`w-15 h-15 justify-center items-center bg-gray-200 p-2 m-1 rounded-full`}
         >
           {friendAvatar ? (
@@ -32,17 +32,23 @@ const FriendAvatar = ({ users, loggedInUserEmail }) => {
           ) : (
             <UserIcon color="black" />
           )}
-        </TouchableOpacity>
-        <View style={tw`w-16 mt-1 justify-center items-center`}>
+        </View>
+        <View style={tw`flex-1 ml-4`}>
           {friendName ? (
-            <Text style={tw`font-normal`}>{friendName}</Text>
+            <Text style={tw`text-lg font-bold pb-1`}>{friendName}</Text>
           ) : (
-            <Text style={tw`font-normal`}>{friendEmail}</Text>
+            <Text style={tw`text-lg font-bold pb-1`}>{friendEmail}</Text>
           )}
+          <Text style={tw`font-light text-xs`}>
+            Hello, how are you doing?...
+          </Text>
+        </View>
+        <View>
+          <Text>00:21</Text>
         </View>
       </View>
-    </>
+    </TouchableOpacity>
   );
 };
 
-export default FriendAvatar;
+export default ChatPreview;
