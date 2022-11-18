@@ -17,8 +17,8 @@ import {
   PlusIcon,
   MagnifyingGlassIcon,
   ArrowTopRightOnSquareIcon,
-  UserIcon,
 } from "react-native-heroicons/solid";
+import FriendAvatar from "../components/FriendAvatar";
 
 const HomeScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -36,7 +36,7 @@ const HomeScreen = () => {
   );
 
   // get the user info
-  const user = userSnapshot?.docs?.[0].data();
+  const user = userSnapshot?.docs?.[0]?.data();
 
   // user sign out
   const handleSignOut = () => {
@@ -134,7 +134,7 @@ const HomeScreen = () => {
       <View style={tw`flex-row pl-3 pb-8 my-2 border-gray-100 border-b-2`}>
         <View style={tw`ml-2`}>
           <TouchableOpacity
-            style={tw`w-15 h-15 justify-center items-center bg-gray-100 p-2 m-1 rounded-full`}
+            style={tw`w-15 h-15 justify-center items-center bg-gray-100 p-2 m-1 rounded-full border-2 border-gray-200`}
           >
             <MagnifyingGlassIcon color="black" size={26} />
           </TouchableOpacity>
@@ -142,36 +142,21 @@ const HomeScreen = () => {
             <Text>Search</Text>
           </View>
         </View>
-        <ScrollView horizontal>
-          <View style={tw`ml-2`}>
-            <TouchableOpacity
-              style={tw`w-15 h-15 justify-center items-center bg-gray-100 p-2 m-1 rounded-full`}
-            >
-              <UserIcon color="black" size={26} />
-            </TouchableOpacity>
-            <View style={tw`w-16 mt-1 justify-center items-center`}>
-              <Text>User</Text>
-            </View>
-          </View>
-          <View style={tw`ml-2`}>
-            <TouchableOpacity
-              style={tw`w-15 h-15 justify-center items-center bg-gray-100 p-2 m-1 rounded-full`}
-            >
-              <UserIcon color="black" size={26} />
-            </TouchableOpacity>
-            <View style={tw`w-16 mt-1 justify-center items-center`}>
-              <Text>User</Text>
-            </View>
-          </View>
+        {/* Loop through each existing chat and display friend's avatar and name beside the search bar */}
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          {chatsSnapshot?.docs.map((chat) => (
+            <FriendAvatar
+              key={chat.id}
+              id={chat.id}
+              users={chat.data().users}
+              loggedInUserEmail={loggedInUserEmail}
+            />
+          ))}
         </ScrollView>
       </View>
 
       {/* Body */}
       {/* Tab Navigation */}
-      <View style={tw`ml-5`}>
-        <Text>Email: {auth.currentUser?.email}</Text>
-        <Text>Name: {user?.displayName}</Text>
-      </View>
     </SafeAreaView>
   );
 };
