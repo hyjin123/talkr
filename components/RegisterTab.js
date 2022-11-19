@@ -29,6 +29,7 @@ const RegisterTab = () => {
 
   // user picking an image for their avatar
   const pickImage = async () => {
+    // User picks an image from their phone gallery
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
@@ -37,15 +38,13 @@ const RegisterTab = () => {
       base64: true,
     });
 
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-      setImage64(result.assets[0].base64);
+    if (result.canceled) {
+      return;
     }
-  };
 
-  const compress = async () => {
+    // compresses and resizes the image so that it fits into firebase database
     const manipResult = await manipulateAsync(
-      image,
+      result.assets[0].uri,
       [{ resize: { width: 120, height: 120 } }],
       {
         compress: 0.2,
@@ -53,7 +52,9 @@ const RegisterTab = () => {
         format: SaveFormat.PNG,
       }
     );
+
     setCompressedImage(manipResult);
+    Alert.alert("Photo successfully uploaded!");
   };
 
   useEffect(() => {
@@ -80,7 +81,7 @@ const RegisterTab = () => {
               displayName: `${firstName} ${lastName}`,
               email: email,
               lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
-              photoURL: compressedImage?.base64,
+              photoURL: compressedImage.base64,
             },
             { merge: true }
           );
@@ -117,19 +118,6 @@ const RegisterTab = () => {
           onChangeText={(text) => setPassword(text)}
         />
         <Button title="Pick an image from camera roll" onPress={pickImage} />
-        <Button title="Pick an image from camera roll" onPress={compress} />
-        {image64 && (
-          <Image
-            source={{ uri: "data:image/jpeg;base64," + image64 }}
-            style={{ width: 50, height: 50 }}
-          />
-        )}
-        {image64 && (
-          <Image
-            source={{ uri: "data:image/png;base64," + compressedImage?.base64 }}
-            style={{ width: 50, height: 50 }}
-          />
-        )}
       </View>
       <View style={tw`justify-center items-center mt-5`}>
         <TouchableOpacity
