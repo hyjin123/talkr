@@ -15,12 +15,14 @@ import {
   VideoCameraIcon,
   PhoneIcon,
   FaceSmileIcon,
+  MicrophoneIcon,
 } from "react-native-heroicons/outline";
 import { auth, db } from "../firebase";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import firebase from "firebase";
 import Messages from "../components/Messages";
+import EmojiPicker from "emoji-picker-react";
 
 const ChatScreen = ({ route, navigation }) => {
   const [input, setInput] = useState("");
@@ -145,15 +147,19 @@ const ChatScreen = ({ route, navigation }) => {
       </View>
 
       {/* Body */}
-      <ScrollView style={tw`flex-1 bg-gray-100`}>{showMessages()}</ScrollView>
+      <ScrollView style={tw`flex-1 bg-gray-100 pt-6`}>
+        {showMessages()}
+      </ScrollView>
 
       {/* Keyboard Input */}
       <View style={tw`bg-gray-100 flex-row items-center justify-center pb-4`}>
         <View
-          style={tw`h-14 border-2 border-r-0 border-gray-400 p-4 rounded-l-3xl`}
+          style={tw`h-14 border-2 border-r-0 items-center justify-center  border-gray-400 p-5 pl-2 rounded-l-3xl`}
         >
-          <TouchableOpacity style={tw`flex-1 items-center justify-center`}>
-            <FaceSmileIcon size={22} color="black" />
+          <TouchableOpacity
+            style={tw`bg-[#fff9bb] rounded-full items-center justify-center w-10 h-10`}
+          >
+            <MicrophoneIcon size={22} color="black" />
           </TouchableOpacity>
         </View>
         <View style={tw`h-14 border-b-2 border-t-2 border-gray-400`}>
@@ -169,12 +175,18 @@ const ChatScreen = ({ route, navigation }) => {
         <View
           style={tw`h-14 border-2 border-l-0 items-center justify-center border-gray-400 p-4 rounded-r-3xl`}
         >
-          <TouchableOpacity
-            onPress={sendMessage}
-            style={tw`bg-[#fff9bb] rounded-full items-center justify-center w-10 h-10`}
-          >
-            <PaperAirplaneIcon size={22} color="black" />
-          </TouchableOpacity>
+          {input.length > 0 ? (
+            <TouchableOpacity
+              onPress={sendMessage}
+              style={tw`flex-1 items-center justify-center`}
+            >
+              <PaperAirplaneIcon size={22} color="black" />
+            </TouchableOpacity>
+          ) : (
+            <View style={tw`flex-1 items-center justify-center`}>
+              <PaperAirplaneIcon size={22} color="black" />
+            </View>
+          )}
         </View>
       </View>
     </SafeAreaView>

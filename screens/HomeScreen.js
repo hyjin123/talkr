@@ -44,7 +44,7 @@ const HomeScreen = () => {
     auth
       .signOut()
       .then(() => {
-        navigation.replace("GetStarted");
+        navigation.replace("Login");
       })
       .catch((error) => alert(error.message));
   };
