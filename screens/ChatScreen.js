@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   TextInput,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import tw from "twrnc";
 import { ArrowLeftIcon, UserIcon } from "react-native-heroicons/solid";
 import {
@@ -18,11 +18,17 @@ import {
 } from "react-native-heroicons/outline";
 import { auth, db } from "../firebase";
 import { useCollection } from "react-firebase-hooks/firestore";
+import { useAuthState } from "react-firebase-hooks/auth";
+import firebase from "firebase";
 
 const ChatScreen = ({ route, navigation }) => {
   const [input, setInput] = useState("");
+  const endOfMessagesRef = useRef(null);
 
-  const { friendAvatar, friendName, friendEmail } = route.params;
+  const { id, friendAvatar, friendName, friendEmail } = route.params;
+
+  // get user information in order to get user.iud (this will help set the last active status)
+  const [user] = useAuthState(auth);
 
   // get the logged in user email through auth
   const loggedInUserEmail = auth.currentUser.email;
@@ -31,6 +37,38 @@ const ChatScreen = ({ route, navigation }) => {
   const [chatsSnapshot] = useCollection(
     db.collection("chats").where("users", "array-contains", loggedInUserEmail)
   );
+
+  const scrollToBottom = () => {
+    endOfMessagesRef.current.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  };
+
+  // When a user sends a meesage
+  const sendMessage = (e) => {
+    e.preventDefault();
+
+    // update last active/seen to current time when a user sends a message
+    db.collection("users").doc(user.uid).set(
+      {
+        lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
+      },
+      { merge: true }
+    );
+
+    // add the content of the message to messages collection within chats collection
+    db.collection("chats").doc(id).collection("messages").add({
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      message: input,
+      user: user.email,
+      photoURL: user.photoURL,
+    });
+
+    // reset input
+    setInput("");
+    // scrollToBottom();
+  };
 
   return (
     <SafeAreaView style={tw`bg-white flex-1`}>
@@ -87,7 +125,10 @@ const ChatScreen = ({ route, navigation }) => {
             let me know how this looks
           </Text>
         </View>
-        <View style={tw`bg-white w-50 border-0 px-3 py-2 m-5 mt-7 rounded-xl`}>
+        <View
+          // ref={endOfMessagesRef}
+          style={tw`bg-white w-50 border-0 px-3 py-2 m-5 mt-7 rounded-xl`}
+        >
           <Text style={tw`text-base`}>Hello</Text>
         </View>
       </ScrollView>
@@ -105,6 +146,8 @@ const ChatScreen = ({ route, navigation }) => {
           <TextInput
             placeholder="Type Message..."
             placeholderTextColor="gray"
+            value={input}
+            onChangeText={(text) => setInput(text)}
             style={tw`border-gray-300 w-50 h-13`}
           />
         </View>
@@ -113,6 +156,7 @@ const ChatScreen = ({ route, navigation }) => {
           style={tw`h-14 border-2 border-l-0 items-center justify-center border-gray-400 p-4 rounded-r-3xl`}
         >
           <TouchableOpacity
+            onPress={sendMessage}
             style={tw`bg-[#fff9bb] rounded-full items-center justify-center w-10 h-10`}
           >
             <PaperAirplaneIcon size={22} color="black" />

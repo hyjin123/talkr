@@ -8,7 +8,7 @@ import getFriendEmail from "../utils/getFriendEmail";
 import firebase from "firebase";
 import { useNavigation } from "@react-navigation/core";
 
-const ChatPreview = ({ users, loggedInUserEmail }) => {
+const ChatPreview = ({ id, users, loggedInUserEmail }) => {
   const navigation = useNavigation();
 
   // use the function that filters out your email and leaves only your friend's email
@@ -25,6 +25,7 @@ const ChatPreview = ({ users, loggedInUserEmail }) => {
   // when a user clicks on their friend, navigate to chat screen
   const handleOpenChat = () => {
     navigation.navigate("Chat", {
+      id,
       friendAvatar,
       friendName,
       friendEmail,
