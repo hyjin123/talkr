@@ -66,6 +66,7 @@ const ChatScreen = ({ route, navigation }) => {
             ...message.data(),
             timestamp: message.data().timestamp?.toDate().getTime(),
           }}
+          loggedInUserEmail={loggedInUserEmail}
         />
       ));
     }
@@ -147,7 +148,7 @@ const ChatScreen = ({ route, navigation }) => {
       <ScrollView style={tw`flex-1 bg-gray-100`}>{showMessages()}</ScrollView>
 
       {/* Keyboard Input */}
-      <View style={tw`bg-gray-50 flex-row items-center justify-center pb-4`}>
+      <View style={tw`bg-gray-100 flex-row items-center justify-center pb-4`}>
         <View
           style={tw`h-14 border-2 border-r-0 border-gray-400 p-4 rounded-l-3xl`}
         >
