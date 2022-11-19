@@ -9,8 +9,6 @@ import firebase from "firebase";
 import { useNavigation } from "@react-navigation/core";
 
 const ChatPreview = ({ users, loggedInUserEmail }) => {
-  const [url, setUrl] = useState(null);
-
   const navigation = useNavigation();
 
   // use the function that filters out your email and leaves only your friend's email
@@ -24,21 +22,10 @@ const ChatPreview = ({ users, loggedInUserEmail }) => {
   const friendAvatar = friendSnapshot?.docs?.[0]?.data().photoURL;
   const friendName = friendSnapshot?.docs?.[0]?.data().displayName;
 
-  // retrieve the avatar of your friend from firebase storage
-  useEffect(() => {
-    let result = firebase.storage()?.ref()?.child(`/${friendAvatar}`);
-    result
-      .getDownloadURL()
-      .then((url) => {
-        setUrl(url);
-      })
-      .catch((err) => console.log(err.message));
-  }, [friendAvatar]);
-
   // when a user clicks on their friend, navigate to chat screen
   const handleOpenChat = () => {
     navigation.navigate("Chat", {
-      url,
+      friendAvatar,
     });
   };
 
@@ -53,7 +40,7 @@ const ChatPreview = ({ users, loggedInUserEmail }) => {
         >
           {friendAvatar ? (
             <Image
-              source={{ uri: url }}
+              source={{ uri: "data:image/jpeg;base64," + friendAvatar }}
               style={tw`w-15 h-15 rounded-full border-2 border-gray-200`}
             />
           ) : (

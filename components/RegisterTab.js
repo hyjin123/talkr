@@ -14,6 +14,7 @@ import { auth, db } from "../firebase";
 import { useNavigation } from "@react-navigation/core";
 import firebase from "firebase";
 import * as ImagePicker from "expo-image-picker";
+import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
 
 const RegisterTab = () => {
   const [firstName, setFirstName] = useState("");
@@ -21,8 +22,8 @@ const RegisterTab = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [image, setImage] = useState(null);
-  const [uploading, setUploading] = useState(false);
-  const [imageURL, setImageURL] = useState("");
+  const [image64, setImage64] = useState(null);
+  const [compressedImage, setCompressedImage] = useState(null);
 
   const navigation = useNavigation();
 
@@ -33,33 +34,26 @@ const RegisterTab = () => {
       allowsEditing: true,
       aspect: [1, 1],
       quality: 1,
+      base64: true,
     });
 
-    // if (!result.canceled) {
-    //   setImage(result.assets[0].uri);
-    // }
-
-    const source = { uri: result.assets[0].uri };
-    setImage(source);
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+      setImage64(result.assets[0].base64);
+    }
   };
 
-  // users upload an image, and can confirm. After confirmation, it uploads it to firestore storage
-  const uploadImage = async () => {
-    setUploading(true);
-    const response = await fetch(image.uri);
-    const blob = await response.blob();
-    const filename = image.uri.substring(image.uri.lastIndexOf("/") + 1);
-    setImageURL(filename);
-    let ref = firebase.storage().ref().child(filename).put(blob);
-
-    try {
-      await ref;
-    } catch (e) {
-      console.log(e);
-    }
-    setUploading(false);
-    Alert.alert("Photo successfully uploaded!");
-    setImage(null);
+  const compress = async () => {
+    const manipResult = await manipulateAsync(
+      image,
+      [{ resize: { width: 120, height: 120 } }],
+      {
+        compress: 0.2,
+        base64: true,
+        format: SaveFormat.PNG,
+      }
+    );
+    setCompressedImage(manipResult);
   };
 
   useEffect(() => {
@@ -86,7 +80,7 @@ const RegisterTab = () => {
               displayName: `${firstName} ${lastName}`,
               email: email,
               lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
-              photoURL: imageURL,
+              photoURL: compressedImage?.base64,
             },
             { merge: true }
           );
@@ -123,13 +117,19 @@ const RegisterTab = () => {
           onChangeText={(text) => setPassword(text)}
         />
         <Button title="Pick an image from camera roll" onPress={pickImage} />
-        {image && (
+        <Button title="Pick an image from camera roll" onPress={compress} />
+        {image64 && (
           <Image
-            source={{ uri: image.uri }}
+            source={{ uri: "data:image/jpeg;base64," + image64 }}
             style={{ width: 50, height: 50 }}
           />
         )}
-        <Button title="choose the image" onPress={uploadImage} />
+        {image64 && (
+          <Image
+            source={{ uri: "data:image/png;base64," + compressedImage?.base64 }}
+            style={{ width: 50, height: 50 }}
+          />
+        )}
       </View>
       <View style={tw`justify-center items-center mt-5`}>
         <TouchableOpacity

@@ -5,19 +5,22 @@ import {
   SafeAreaView,
   ScrollView,
   TouchableOpacity,
+  TextInput,
 } from "react-native";
 import React from "react";
 import tw from "twrnc";
 import {
   PlusIcon,
   ArrowLeftIcon,
-  ArrowTopRightOnSquareIcon,
   VideoCameraIcon,
   PhoneIcon,
+  FaceSmileIcon,
+  MicrophoneIcon,
+  UserIcon,
 } from "react-native-heroicons/solid";
 
 const ChatScreen = ({ route, navigation }) => {
-  const { url } = route.params;
+  const { friendAvatar } = route.params;
 
   return (
     <SafeAreaView style={tw`bg-white flex-1`}>
@@ -28,9 +31,9 @@ const ChatScreen = ({ route, navigation }) => {
         </TouchableOpacity>
         <View style={tw`flex-row flex-1 items-center ml-4`}>
           <View>
-            {url ? (
+            {friendAvatar ? (
               <Image
-                source={{ uri: url }}
+                source={{ uri: "data:image/jpeg;base64," + friendAvatar }}
                 style={tw`w-15 h-15 rounded-full border-2 border-gray-200`}
               />
             ) : (
@@ -58,10 +61,37 @@ const ChatScreen = ({ route, navigation }) => {
       </View>
 
       {/* Body */}
-      <ScrollView></ScrollView>
+      <ScrollView style={tw`flex-1 bg-gray-50`}>
+        <Text>This is where messages will go</Text>
+      </ScrollView>
 
       {/* Keyboard Input */}
-      <View></View>
+      <View style={tw`bg-gray-50 flex-row items-center justify-center pb-4`}>
+        <View
+          style={tw`h-14 border-2 border-r-0 border-gray-400 p-4 rounded-l-3xl`}
+        >
+          <TouchableOpacity style={tw`flex-1 items-center justify-center`}>
+            <FaceSmileIcon size={22} color="black" />
+          </TouchableOpacity>
+        </View>
+        <View style={tw`h-14 border-b-2 border-t-2 border-gray-400`}>
+          <TextInput
+            placeholder="Type Message..."
+            placeholderTextColor="gray"
+            style={tw`border-gray-300 w-50 h-13`}
+          />
+        </View>
+
+        <View
+          style={tw`h-14 border-2 border-l-0 items-center justify-center border-gray-400 p-4 rounded-r-3xl`}
+        >
+          <TouchableOpacity
+            style={tw`bg-[#fff9bb] rounded-full items-center justify-center w-10 h-10`}
+          >
+            <MicrophoneIcon size={22} color="black" />
+          </TouchableOpacity>
+        </View>
+      </View>
     </SafeAreaView>
   );
 };
