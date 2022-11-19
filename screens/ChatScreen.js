@@ -22,7 +22,7 @@ import { useCollection } from "react-firebase-hooks/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import firebase from "firebase";
 import Messages from "../components/Messages";
-import EmojiPicker from "emoji-picker-react";
+import TimeAgo from "react-native-timeago";
 
 const ChatScreen = ({ route, navigation }) => {
   const [input, setInput] = useState("");
@@ -47,6 +47,13 @@ const ChatScreen = ({ route, navigation }) => {
       block: "start",
     });
   };
+
+  // get all the friend information - need their last active status through this
+  const [friendSnapshot] = useCollection(
+    db.collection("users").where("email", "==", friendEmail[0])
+  );
+
+  const friend = friendSnapshot?.docs?.[0]?.data();
 
   // getting messages snapshot from the database
   const [messagesSnapshot] = useCollection(
@@ -106,7 +113,7 @@ const ChatScreen = ({ route, navigation }) => {
         <TouchableOpacity onPress={() => navigation.navigate("Home")}>
           <ArrowLeftIcon size={24} color="black" />
         </TouchableOpacity>
-        <View style={tw`flex-row flex-1 items-center ml-4`}>
+        <View style={tw`flex-row flex-1 items-center ml-2`}>
           {friendAvatar ? (
             <View>
               <Image
@@ -122,13 +129,24 @@ const ChatScreen = ({ route, navigation }) => {
             </View>
           )}
 
-          <View style={tw`pl-3`}>
+          <View style={tw`pl-2`}>
             {friendName ? (
               <Text style={tw`text-lg font-bold`}>{friendName}</Text>
             ) : (
               <Text style={tw`text-sm font-bold`}>{friendEmail}</Text>
             )}
-            <Text style={tw`text-gray-500`}>Last Active: ...</Text>
+            {friendSnapshot ? (
+              <Text style={tw`text-xs`}>
+                Last Active: {"\n"}
+                {friend?.lastSeen?.toDate() ? (
+                  <TimeAgo time={friend?.lastSeen?.toDate()} />
+                ) : (
+                  "Unavailable"
+                )}
+              </Text>
+            ) : (
+              <Text>Unavailable</Text>
+            )}
           </View>
         </View>
 

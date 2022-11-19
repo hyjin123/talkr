@@ -16,7 +16,11 @@ const Messages = ({ user, message, loggedInUserEmail }) => {
       >
         <Text style={tw`text-base`}>{message.message}</Text>
       </View>
-      <View style={tw`ml-auto mr-6 mt-1`}>
+      <View
+        style={tw`${
+          messageType === "sender" ? "ml-auto mr-7 mt-1" : "mr-auto ml-7 mt-1"
+        }`}
+      >
         <Text style={tw`text-xs font-light text-gray-600`}>
           {/* display message timestamp in local time format */}
           {message.timestamp ? moment(message.timestamp).format("LT") : "..."}
