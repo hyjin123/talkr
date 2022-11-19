@@ -1,12 +1,12 @@
-import { View, Text, ScrollView, Image, TouchableOpacity } from "react-native";
+import { View, Text, Image, TouchableOpacity } from "react-native";
 import { db } from "../firebase";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import tw from "twrnc";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { UserIcon } from "react-native-heroicons/solid";
 import getFriendEmail from "../utils/getFriendEmail";
-import firebase from "firebase";
 import { useNavigation } from "@react-navigation/core";
+import moment from "moment";
 
 const ChatPreview = ({ id, users, loggedInUserEmail }) => {
   const navigation = useNavigation();
@@ -32,6 +32,20 @@ const ChatPreview = ({ id, users, loggedInUserEmail }) => {
     });
   };
 
+  // getting messages snapshot from the database
+  const [messagesSnapshot] = useCollection(
+    db
+      .collection("chats")
+      .doc(id)
+      .collection("messages")
+      .orderBy("timestamp", "asc")
+  );
+
+  // get the information about the latest message from either yourself or your friend so that it displays on preview
+  const messagesSnapshotLength = messagesSnapshot?.docs.length;
+  const latestMessage =
+    messagesSnapshot?.docs[messagesSnapshotLength - 1]?.data();
+
   return (
     <TouchableOpacity
       onPress={handleOpenChat}
@@ -56,12 +70,18 @@ const ChatPreview = ({ id, users, loggedInUserEmail }) => {
           ) : (
             <Text style={tw`text-lg font-bold pb-1`}>{friendEmail}</Text>
           )}
-          <Text style={tw`font-light text-xs`}>
-            Hello, how are you doing?...
-          </Text>
+          {latestMessage?.message ? (
+            <Text style={tw`font-light text-xs`}>{latestMessage?.message}</Text>
+          ) : (
+            <Text style={tw`font-light text-xs`}>No messages</Text>
+          )}
         </View>
-        <View>
-          <Text>00:21</Text>
+        <View style={tw`mr-4`}>
+          <Text style={tw`font-light text-xs`}>
+            {latestMessage?.timestamp
+              ? moment(latestMessage?.timestamp.toDate().getTime()).format("LT")
+              : "..."}
+          </Text>
         </View>
       </View>
     </TouchableOpacity>
