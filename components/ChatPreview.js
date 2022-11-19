@@ -26,6 +26,8 @@ const ChatPreview = ({ users, loggedInUserEmail }) => {
   const handleOpenChat = () => {
     navigation.navigate("Chat", {
       friendAvatar,
+      friendName,
+      friendEmail,
     });
   };
 

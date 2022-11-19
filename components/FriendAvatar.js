@@ -5,7 +5,6 @@ import { UserIcon } from "react-native-heroicons/solid";
 import tw from "twrnc";
 import getFriendEmail from "../utils/getFriendEmail";
 import { useCollection } from "react-firebase-hooks/firestore";
-import firebase from "firebase";
 import { useNavigation } from "@react-navigation/core";
 
 const FriendAvatar = ({ users, loggedInUserEmail }) => {
@@ -26,6 +25,8 @@ const FriendAvatar = ({ users, loggedInUserEmail }) => {
   const handleOpenChat = () => {
     navigation.navigate("Chat", {
       friendAvatar,
+      friendName,
+      friendEmail,
     });
   };
   return (

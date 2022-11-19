@@ -7,20 +7,30 @@ import {
   TouchableOpacity,
   TextInput,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import tw from "twrnc";
+import { ArrowLeftIcon, UserIcon } from "react-native-heroicons/solid";
 import {
-  PlusIcon,
-  ArrowLeftIcon,
+  PaperAirplaneIcon,
   VideoCameraIcon,
   PhoneIcon,
   FaceSmileIcon,
-  MicrophoneIcon,
-  UserIcon,
-} from "react-native-heroicons/solid";
+} from "react-native-heroicons/outline";
+import { auth, db } from "../firebase";
+import { useCollection } from "react-firebase-hooks/firestore";
 
 const ChatScreen = ({ route, navigation }) => {
-  const { friendAvatar } = route.params;
+  const [input, setInput] = useState("");
+
+  const { friendAvatar, friendName, friendEmail } = route.params;
+
+  // get the logged in user email through auth
+  const loggedInUserEmail = auth.currentUser.email;
+
+  // get a chat collection snapchat from firebase
+  const [chatsSnapshot] = useCollection(
+    db.collection("chats").where("users", "array-contains", loggedInUserEmail)
+  );
 
   return (
     <SafeAreaView style={tw`bg-white flex-1`}>
@@ -30,18 +40,27 @@ const ChatScreen = ({ route, navigation }) => {
           <ArrowLeftIcon size={24} color="black" />
         </TouchableOpacity>
         <View style={tw`flex-row flex-1 items-center ml-4`}>
-          <View>
-            {friendAvatar ? (
+          {friendAvatar ? (
+            <View>
               <Image
                 source={{ uri: "data:image/jpeg;base64," + friendAvatar }}
                 style={tw`w-15 h-15 rounded-full border-2 border-gray-200`}
               />
-            ) : (
+            </View>
+          ) : (
+            <View
+              style={tw`w-15 h-15 justify-center items-center bg-gray-200 p-2 m-1 rounded-full`}
+            >
               <UserIcon color="black" />
-            )}
-          </View>
+            </View>
+          )}
+
           <View style={tw`pl-3`}>
-            <Text style={tw`text-lg font-bold`}>Sean Jin</Text>
+            {friendName ? (
+              <Text style={tw`text-lg font-bold`}>{friendName}</Text>
+            ) : (
+              <Text style={tw`text-sm font-bold`}>{friendEmail}</Text>
+            )}
             <Text style={tw`text-gray-500`}>Last Active: ...</Text>
           </View>
         </View>
@@ -61,8 +80,16 @@ const ChatScreen = ({ route, navigation }) => {
       </View>
 
       {/* Body */}
-      <ScrollView style={tw`flex-1 bg-gray-50`}>
-        <Text>This is where messages will go</Text>
+      <ScrollView style={tw`flex-1 bg-gray-100`}>
+        <View style={tw`bg-white w-50 border-0 px-3 py-2 mx-5 mt-7 rounded-xl`}>
+          <Text style={tw`text-base`}>
+            This is where messages will go, this is an example message, please
+            let me know how this looks
+          </Text>
+        </View>
+        <View style={tw`bg-white w-50 border-0 px-3 py-2 m-5 mt-7 rounded-xl`}>
+          <Text style={tw`text-base`}>Hello</Text>
+        </View>
       </ScrollView>
 
       {/* Keyboard Input */}
@@ -88,7 +115,7 @@ const ChatScreen = ({ route, navigation }) => {
           <TouchableOpacity
             style={tw`bg-[#fff9bb] rounded-full items-center justify-center w-10 h-10`}
           >
-            <MicrophoneIcon size={22} color="black" />
+            <PaperAirplaneIcon size={22} color="black" />
           </TouchableOpacity>
         </View>
       </View>
