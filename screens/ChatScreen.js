@@ -20,6 +20,7 @@ import { auth, db } from "../firebase";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import firebase from "firebase";
+import Messages from "../components/Messages";
 
 const ChatScreen = ({ route, navigation }) => {
   const [input, setInput] = useState("");
@@ -43,6 +44,31 @@ const ChatScreen = ({ route, navigation }) => {
       behavior: "smooth",
       block: "start",
     });
+  };
+
+  // getting messages snapshot from the database
+  const [messagesSnapshot] = useCollection(
+    db
+      .collection("chats")
+      .doc(id)
+      .collection("messages")
+      .orderBy("timestamp", "asc")
+  );
+
+  // showing all the messages
+  const showMessages = () => {
+    if (messagesSnapshot) {
+      return messagesSnapshot.docs.map((message) => (
+        <Messages
+          key={message.id}
+          user={message.data().user}
+          message={{
+            ...message.data(),
+            timestamp: message.data().timestamp?.toDate().getTime(),
+          }}
+        />
+      ));
+    }
   };
 
   // When a user sends a meesage
@@ -118,20 +144,7 @@ const ChatScreen = ({ route, navigation }) => {
       </View>
 
       {/* Body */}
-      <ScrollView style={tw`flex-1 bg-gray-100`}>
-        <View style={tw`bg-white w-50 border-0 px-3 py-2 mx-5 mt-7 rounded-xl`}>
-          <Text style={tw`text-base`}>
-            This is where messages will go, this is an example message, please
-            let me know how this looks
-          </Text>
-        </View>
-        <View
-          // ref={endOfMessagesRef}
-          style={tw`bg-white w-50 border-0 px-3 py-2 m-5 mt-7 rounded-xl`}
-        >
-          <Text style={tw`text-base`}>Hello</Text>
-        </View>
-      </ScrollView>
+      <ScrollView style={tw`flex-1 bg-gray-100`}>{showMessages()}</ScrollView>
 
       {/* Keyboard Input */}
       <View style={tw`bg-gray-50 flex-row items-center justify-center pb-4`}>
