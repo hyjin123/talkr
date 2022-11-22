@@ -26,7 +26,7 @@ import TimeAgo from "react-native-timeago";
 
 const ChatScreen = ({ route, navigation }) => {
   const [input, setInput] = useState("");
-  const endOfMessagesRef = useRef(null);
+  const scrollViewRef = useRef();
 
   const { id, friendAvatar, friendName, friendEmail } = route.params;
 
@@ -103,7 +103,6 @@ const ChatScreen = ({ route, navigation }) => {
 
     // reset input
     setInput("");
-    // scrollToBottom();
   };
 
   return (
@@ -165,7 +164,14 @@ const ChatScreen = ({ route, navigation }) => {
       </View>
 
       {/* Body */}
-      <ScrollView style={tw`flex-1 bg-gray-100 pt-6`}>
+      <ScrollView
+        style={tw`flex-1 bg-gray-100 pt-6`}
+        ref={scrollViewRef}
+        // have it scrolled to the bottom to show the latest messages
+        onContentSizeChange={() =>
+          scrollViewRef?.current?.scrollToEnd({ animated: true })
+        }
+      >
         {showMessages()}
       </ScrollView>
 

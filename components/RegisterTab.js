@@ -117,7 +117,15 @@ const RegisterTab = () => {
           value={password}
           onChangeText={(text) => setPassword(text)}
         />
-        <Button title="Pick an image from camera roll" onPress={pickImage} />
+
+        <TouchableOpacity
+          style={tw`border-2 border-gray-400 rounded-lg mt-4 w-50 self-center p-3`}
+          onPress={pickImage}
+        >
+          <Text style={tw`text-center text-blue-600 font-bold`}>
+            Pick your profile picture
+          </Text>
+        </TouchableOpacity>
       </View>
       <View style={tw`justify-center items-center mt-5`}>
         <TouchableOpacity

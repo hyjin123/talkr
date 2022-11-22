@@ -47,44 +47,55 @@ const ChatPreview = ({ id, users, loggedInUserEmail }) => {
     messagesSnapshot?.docs[messagesSnapshotLength - 1]?.data();
 
   return (
-    <TouchableOpacity
-      onPress={handleOpenChat}
-      style={tw`border-b-2 border-gray-100`}
-    >
-      <View style={tw`flex-row justify-between items-center p-4`}>
-        <View
-          style={tw`w-15 h-15 justify-center items-center bg-gray-200 p-2 m-1 rounded-full`}
+    <>
+      {/* if there are any messages, show the preview, if not, nothing */}
+      {messagesSnapshotLength > 0 ? (
+        <TouchableOpacity
+          onPress={handleOpenChat}
+          style={tw`border-b-2 border-gray-100`}
         >
-          {friendAvatar ? (
-            <Image
-              source={{ uri: "data:image/jpeg;base64," + friendAvatar }}
-              style={tw`w-15 h-15 rounded-full border-2 border-gray-200`}
-            />
-          ) : (
-            <UserIcon color="black" />
-          )}
-        </View>
-        <View style={tw`flex-1 ml-4`}>
-          {friendName ? (
-            <Text style={tw`text-lg font-bold pb-1`}>{friendName}</Text>
-          ) : (
-            <Text style={tw`text-lg font-bold pb-1`}>{friendEmail}</Text>
-          )}
-          {latestMessage?.message ? (
-            <Text style={tw`font-light text-xs`}>{latestMessage?.message}</Text>
-          ) : (
-            <Text style={tw`font-light text-xs`}>No messages</Text>
-          )}
-        </View>
-        <View style={tw`mr-4`}>
-          <Text style={tw`font-light text-xs`}>
-            {latestMessage?.timestamp
-              ? moment(latestMessage?.timestamp.toDate().getTime()).format("LT")
-              : "..."}
-          </Text>
-        </View>
-      </View>
-    </TouchableOpacity>
+          <View style={tw`flex-row justify-between items-center p-4`}>
+            <View
+              style={tw`w-15 h-15 justify-center items-center bg-gray-200 p-2 m-1 rounded-full`}
+            >
+              {friendAvatar ? (
+                <Image
+                  source={{ uri: "data:image/jpeg;base64," + friendAvatar }}
+                  style={tw`w-15 h-15 rounded-full border-2 border-gray-200`}
+                />
+              ) : (
+                <UserIcon color="black" />
+              )}
+            </View>
+            <View style={tw`flex-1 ml-4`}>
+              {friendName ? (
+                <Text style={tw`text-lg font-bold pb-1`}>{friendName}</Text>
+              ) : (
+                <Text style={tw`text-lg font-bold pb-1`}>{friendEmail}</Text>
+              )}
+              {latestMessage?.message ? (
+                <Text style={tw`font-light text-xs`}>
+                  {latestMessage?.message}
+                </Text>
+              ) : (
+                <Text style={tw`font-light text-xs`}>No messages</Text>
+              )}
+            </View>
+            <View style={tw`mr-4`}>
+              <Text style={tw`font-light text-xs`}>
+                {latestMessage?.timestamp
+                  ? moment(latestMessage?.timestamp.toDate().getTime()).format(
+                      "LT"
+                    )
+                  : "..."}
+              </Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+      ) : (
+        <></>
+      )}
+    </>
   );
 };
 
