@@ -52,7 +52,7 @@ const ChatPreview = ({ id, users, loggedInUserEmail }) => {
       {messagesSnapshotLength > 0 ? (
         <TouchableOpacity
           onPress={handleOpenChat}
-          style={tw`border-b-2 border-gray-100`}
+          style={tw`border-b-2 border-gray-200`}
         >
           <View style={tw`flex-row justify-between items-center p-4`}>
             <View

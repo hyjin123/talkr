@@ -106,114 +106,118 @@ const ChatScreen = ({ route, navigation }) => {
   };
 
   return (
-    <SafeAreaView style={tw`bg-white flex-1`}>
-      {/* Header */}
-      <View style={tw`flex-row justify-between items-center m-5`}>
-        <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-          <ArrowLeftIcon size={24} color="black" />
-        </TouchableOpacity>
-        <View style={tw`flex-row flex-1 items-center ml-2`}>
-          {friendAvatar ? (
-            <View>
-              <Image
-                source={{ uri: "data:image/jpeg;base64," + friendAvatar }}
-                style={tw`w-15 h-15 rounded-full border-2 border-gray-200`}
-              />
-            </View>
-          ) : (
-            <View
-              style={tw`w-15 h-15 justify-center items-center bg-gray-200 p-2 m-1 rounded-full`}
-            >
-              <UserIcon color="black" />
-            </View>
-          )}
+    <>
+      {/* this SafeAreaView is set so that the top of the screen's background remains white */}
+      <SafeAreaView style={tw`flex-0 bg-white`} />
+      <SafeAreaView style={tw`bg-gray-100 flex-1`}>
+        {/* Header */}
+        <View style={tw`flex-row justify-between items-center p-5 bg-white`}>
+          <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+            <ArrowLeftIcon size={24} color="black" />
+          </TouchableOpacity>
+          <View style={tw`flex-row flex-1 items-center ml-2`}>
+            {friendAvatar ? (
+              <View>
+                <Image
+                  source={{ uri: "data:image/jpeg;base64," + friendAvatar }}
+                  style={tw`w-15 h-15 rounded-full border-2 border-gray-200`}
+                />
+              </View>
+            ) : (
+              <View
+                style={tw`w-15 h-15 justify-center items-center bg-gray-200 p-2 m-1 rounded-full`}
+              >
+                <UserIcon color="black" />
+              </View>
+            )}
 
-          <View style={tw`pl-2`}>
-            {friendName ? (
-              <Text style={tw`text-lg font-bold`}>{friendName}</Text>
-            ) : (
-              <Text style={tw`text-sm font-bold`}>{friendEmail}</Text>
-            )}
-            {friendSnapshot ? (
-              <Text style={tw`text-xs`}>
-                Last Active: {"\n"}
-                {friend?.lastSeen?.toDate() ? (
-                  <TimeAgo time={friend?.lastSeen?.toDate()} />
-                ) : (
-                  "Unavailable"
-                )}
-              </Text>
-            ) : (
-              <Text>Unavailable</Text>
-            )}
+            <View style={tw`pl-2`}>
+              {friendName ? (
+                <Text style={tw`text-lg font-bold`}>{friendName}</Text>
+              ) : (
+                <Text style={tw`text-sm font-bold`}>{friendEmail}</Text>
+              )}
+              {friendSnapshot ? (
+                <Text style={tw`text-xs`}>
+                  Last Active: {"\n"}
+                  {friend?.lastSeen?.toDate() ? (
+                    <TimeAgo time={friend?.lastSeen?.toDate()} />
+                  ) : (
+                    "Unavailable"
+                  )}
+                </Text>
+              ) : (
+                <Text>Unavailable</Text>
+              )}
+            </View>
+          </View>
+
+          <View style={tw`flex-row w-30`}>
+            <TouchableOpacity
+              style={tw`flex-1 items-center w-25 bg-[#fff9bb] p-2 m-1 rounded-full`}
+            >
+              <VideoCameraIcon size={24} color="black" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={tw`flex-1 items-center w-15 bg-[#fff9bb] p-2 m-1 rounded-full`}
+            >
+              <PhoneIcon size={24} color="black" />
+            </TouchableOpacity>
           </View>
         </View>
 
-        <View style={tw`flex-row w-30`}>
-          <TouchableOpacity
-            style={tw`flex-1 items-center w-25 bg-[#fff9bb] p-2 m-1 rounded-full`}
-          >
-            <VideoCameraIcon size={24} color="black" />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={tw`flex-1 items-center w-15 bg-[#fff9bb] p-2 m-1 rounded-full`}
-          >
-            <PhoneIcon size={24} color="black" />
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      {/* Body */}
-      <ScrollView
-        style={tw`flex-1 bg-gray-100 pt-6`}
-        ref={scrollViewRef}
-        // have it scrolled to the bottom to show the latest messages
-        onContentSizeChange={() =>
-          scrollViewRef?.current?.scrollToEnd({ animated: true })
-        }
-      >
-        {showMessages()}
-      </ScrollView>
-
-      {/* Keyboard Input */}
-      <View style={tw`bg-gray-100 flex-row items-center justify-center pb-4`}>
-        <View
-          style={tw`h-14 border-2 border-r-0 items-center justify-center  border-gray-400 p-5 pl-2 rounded-l-3xl`}
+        {/* Body */}
+        <ScrollView
+          style={tw`flex-1 bg-gray-100 pt-6 pb-6`}
+          ref={scrollViewRef}
+          // have it scrolled to the bottom to show the latest messages
+          onContentSizeChange={() =>
+            scrollViewRef?.current?.scrollToEnd({ animated: true })
+          }
         >
-          <TouchableOpacity
-            style={tw`bg-[#fff9bb] rounded-full items-center justify-center w-10 h-10`}
-          >
-            <MicrophoneIcon size={22} color="black" />
-          </TouchableOpacity>
-        </View>
-        <View style={tw`h-14 border-b-2 border-t-2 border-gray-400`}>
-          <TextInput
-            placeholder="Type Message..."
-            placeholderTextColor="gray"
-            value={input}
-            onChangeText={(text) => setInput(text)}
-            style={tw`border-gray-300 w-50 h-13`}
-          />
-        </View>
+          <View style={tw`pb-10`}>{showMessages()}</View>
+        </ScrollView>
 
-        <View
-          style={tw`h-14 border-2 border-l-0 items-center justify-center border-gray-400 p-4 rounded-r-3xl`}
-        >
-          {input.length > 0 ? (
+        {/* Keyboard Input */}
+        <View style={tw`bg-gray-100 flex-row items-center justify-center pb-4`}>
+          <View
+            style={tw`h-14 border-2 border-r-0 items-center justify-center  border-gray-400 p-5 pl-2 rounded-l-3xl`}
+          >
             <TouchableOpacity
-              onPress={sendMessage}
-              style={tw`flex-1 items-center justify-center`}
+              style={tw`bg-[#fff9bb] rounded-full items-center justify-center w-10 h-10`}
             >
-              <PaperAirplaneIcon size={22} color="black" />
+              <MicrophoneIcon size={22} color="black" />
             </TouchableOpacity>
-          ) : (
-            <View style={tw`flex-1 items-center justify-center`}>
-              <PaperAirplaneIcon size={22} color="black" />
-            </View>
-          )}
+          </View>
+          <View style={tw`h-14 border-b-2 border-t-2 border-gray-400`}>
+            <TextInput
+              placeholder="Type Message..."
+              placeholderTextColor="gray"
+              value={input}
+              onChangeText={(text) => setInput(text)}
+              style={tw`border-gray-300 w-50 h-13`}
+            />
+          </View>
+
+          <View
+            style={tw`h-14 border-2 border-l-0 items-center justify-center border-gray-400 p-4 rounded-r-3xl`}
+          >
+            {input.length > 0 ? (
+              <TouchableOpacity
+                onPress={sendMessage}
+                style={tw`flex-1 items-center justify-center`}
+              >
+                <PaperAirplaneIcon size={22} color="black" />
+              </TouchableOpacity>
+            ) : (
+              <View style={tw`flex-1 items-center justify-center`}>
+                <PaperAirplaneIcon size={22} color="black" />
+              </View>
+            )}
+          </View>
         </View>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </>
   );
 };
 
