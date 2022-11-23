@@ -13,6 +13,8 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 const ChatPreview = ({ id, users, loggedInUserEmail }) => {
   const navigation = useNavigation();
 
+  const batch = db.batch();
+
   // use the function that filters out your email and leaves only your friend's email
   const friendEmail = getFriendEmail(users, loggedInUserEmail);
 
@@ -24,18 +26,6 @@ const ChatPreview = ({ id, users, loggedInUserEmail }) => {
   const friendAvatar = friendSnapshot?.docs?.[0]?.data().photoURL;
   const friendName = friendSnapshot?.docs?.[0]?.data().displayName;
 
-  // when a user clicks on their friend, navigate to chat screen
-  const handleOpenChat = () => {
-    // navigate to the chat screen
-    navigation.navigate("Chat", {
-      id,
-      friendAvatar,
-      friendName,
-      friendEmail,
-    });
-    // set the messages "read" property to true since opening the chat means they have read all the messages sent by the friend
-  };
-
   // getting messages snapshot from the database
   const [messagesSnapshot] = useCollection(
     db
@@ -45,6 +35,28 @@ const ChatPreview = ({ id, users, loggedInUserEmail }) => {
       .orderBy("timestamp", "asc")
   );
 
+  // when a user clicks on their friend, navigate to chat screen
+  const handleOpenChat = () => {
+    // set the messages "read" property to true since opening the chat means they have read all the messages sent by the friend
+    messagesSnapshot?.docs?.forEach((doc) => {
+      // update each message 1 by 1 and set read to true
+      db.collection("chats").doc(id).collection("messages").doc(doc.id).set(
+        {
+          read: true,
+        },
+        { merge: true }
+      );
+    });
+
+    // navigate to the chat screen
+    navigation.navigate("Chat", {
+      id,
+      friendAvatar,
+      friendName,
+      friendEmail,
+    });
+  };
+
   // get the information about the latest message from either yourself or your friend so that it displays on preview
   const messagesSnapshotLength = messagesSnapshot?.docs.length;
   const latestMessage =
@@ -53,9 +65,12 @@ const ChatPreview = ({ id, users, loggedInUserEmail }) => {
   // Loop through the messages to see how many messages are unread and display it
   let unreadMessagesCount = 0;
   for (let i = 0; i < messagesSnapshotLength; i++) {
-    console.log(messagesSnapshot.docs[i].data());
-    if (messagesSnapshot.docs[i].data().read === false) {
-      unreadMessagesCount += 1;
+    // if the message is your friend's incoming message
+    if (messagesSnapshot.docs[i].data().user === friendEmail[0]) {
+      // if the message is your friend's message AND read is false, add to the unreadMessageCount
+      if (messagesSnapshot.docs[i].data().read === false) {
+        unreadMessagesCount += 1;
+      }
     }
   }
 
@@ -132,11 +147,15 @@ const ChatPreview = ({ id, users, loggedInUserEmail }) => {
                         : "..."}
                     </Text>
                   </View>
-                  <View style={tw`p-2 mt-2 rounded-full bg-[#fff9bb]`}>
-                    <Text style={tw`text-center text-red-500`}>
-                      {unreadMessagesCount}
-                    </Text>
-                  </View>
+                  {unreadMessagesCount > 0 ? (
+                    <View style={tw`p-2 mt-2 rounded-full bg-[#fff9bb]`}>
+                      <Text style={tw`text-center text-red-500`}>
+                        {unreadMessagesCount}
+                      </Text>
+                    </View>
+                  ) : (
+                    <></>
+                  )}
                 </View>
               </View>
             </TouchableOpacity>
