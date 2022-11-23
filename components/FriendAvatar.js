@@ -21,8 +21,28 @@ const FriendAvatar = ({ id, users, loggedInUserEmail }) => {
   const friendAvatar = friendSnapshot?.docs?.[0]?.data().photoURL;
   const friendName = friendSnapshot?.docs?.[0]?.data().displayName;
 
+  // getting messages snapshot from the database
+  const [messagesSnapshot] = useCollection(
+    db
+      .collection("chats")
+      .doc(id)
+      .collection("messages")
+      .orderBy("timestamp", "asc")
+  );
+
   // when a user clicks on their friend, navigate to chat screen
   const handleOpenChat = () => {
+    // set the messages "read" property to true since opening the chat means they have read all the messages sent by the friend
+    messagesSnapshot?.docs?.forEach((doc) => {
+      // update each message 1 by 1 and set read to true
+      db.collection("chats").doc(id).collection("messages").doc(doc.id).set(
+        {
+          read: true,
+        },
+        { merge: true }
+      );
+    });
+
     navigation.navigate("Chat", {
       id,
       friendAvatar,
