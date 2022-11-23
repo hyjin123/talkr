@@ -41,13 +41,6 @@ const ChatScreen = ({ route, navigation }) => {
     db.collection("chats").where("users", "array-contains", loggedInUserEmail)
   );
 
-  const scrollToBottom = () => {
-    endOfMessagesRef.current.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
-  };
-
   // get all the friend information - need their last active status through this
   const [friendSnapshot] = useCollection(
     db.collection("users").where("email", "==", friendEmail[0])
@@ -99,6 +92,7 @@ const ChatScreen = ({ route, navigation }) => {
       message: input,
       user: user.email,
       photoURL: user.photoURL,
+      read: false,
     });
 
     // reset input
