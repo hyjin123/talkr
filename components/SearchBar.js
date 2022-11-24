@@ -22,7 +22,6 @@ const SearchBar = ({ chatsSnapshot, loggedInUserEmail }) => {
     setInput("");
   };
 
-  console.log(input);
   return (
     <View
       style={tw`bg-white pl-3 pb-8 border-gray-100 rounded-br-3xl rounded-bl-3xl border-b-4 border-l-2 border-r-2 z-5 

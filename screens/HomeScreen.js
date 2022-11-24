@@ -23,6 +23,7 @@ import SearchBar from "../components/SearchBar";
 const HomeScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [addedEmail, setAddedEmail] = useState("");
+  const [signoutModalVisible, setSignoutModalVisible] = useState(false);
 
   const navigation = useNavigation();
 
@@ -90,7 +91,7 @@ const HomeScreen = () => {
           onBackdropPress={() => setModalVisible(false)}
         >
           <View
-            style={tw`flex-1 justify-center items-center bg-white my-80 mx-10`}
+            style={tw`flex-1 justify-center items-center bg-white my-80 mx-5`}
           >
             <Text>Add a Friend</Text>
             <TextInput
@@ -105,6 +106,26 @@ const HomeScreen = () => {
               style={tw`bg-[#fff9bb] font-bold rounded-full px-15 py-2 mt-6`}
             >
               <Text style={tw`text-black`}>ADD</Text>
+            </TouchableOpacity>
+          </View>
+        </Modal>
+
+        {/* Modal - Signout */}
+        <Modal
+          isVisible={signoutModalVisible}
+          onBackdropPress={() => setSignoutModalVisible(false)}
+        >
+          <View
+            style={tw`flex-1 justify-center items-center bg-white my-80 mx-5`}
+          >
+            <Text style={tw`font-medium text-lg`}>
+              Are you sure you want to sign out?
+            </Text>
+            <TouchableOpacity
+              onPress={handleSignOut}
+              style={tw`bg-[#fff9bb] font-bold rounded-full px-15 py-2 mt-6`}
+            >
+              <Text style={tw`text-black`}>Confirm</Text>
             </TouchableOpacity>
           </View>
         </Modal>
@@ -125,7 +146,7 @@ const HomeScreen = () => {
               <PlusIcon size={24} color="black" />
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={handleSignOut}
+              onPress={() => setSignoutModalVisible(true)}
               style={tw`flex-1 items-center w-15 bg-[#fff9bb] p-2 m-1 rounded-full`}
             >
               <ArrowTopRightOnSquareIcon size={24} color="black" />

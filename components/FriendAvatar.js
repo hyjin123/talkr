@@ -53,7 +53,7 @@ const FriendAvatar = ({ id, users, loggedInUserEmail, input }) => {
   return (
     <>
       {/* if the name of the friend matches/includes the search input, display the avatar, if not, don't display it */}
-      {friendName.toLowerCase().includes(input) ? (
+      {friendName?.toLowerCase().includes(input) ? (
         <View style={tw`ml-2`}>
           <TouchableOpacity
             onPress={handleOpenChat}
