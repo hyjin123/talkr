@@ -86,6 +86,18 @@ const ChatScreen = ({ route, navigation }) => {
       { merge: true }
     );
 
+    // update the delete property of the chat to false. Meaning if user deleted the chat before, it will show up now since they sent
+    // a new message, if it wasn't deleted, it will just overwrite
+    // can refactor this into conditional so it doesn't always overwrite
+    db.collection("chats")
+      .doc(id)
+      .set(
+        {
+          status: { [loggedInUserEmail]: { delete: false } },
+        },
+        { merge: true }
+      );
+
     // add the content of the message to messages collection within chats collection
     db.collection("chats").doc(id).collection("messages").add({
       timestamp: firebase.firestore.FieldValue.serverTimestamp(),
