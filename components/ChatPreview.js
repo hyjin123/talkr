@@ -1,6 +1,6 @@
 import { View, Text, Image, TouchableOpacity, Animated } from "react-native";
 import { db } from "../firebase";
-import React from "react";
+import React, { useState } from "react";
 import tw from "twrnc";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { UserIcon, TrashIcon } from "react-native-heroicons/solid";
@@ -9,11 +9,12 @@ import { useNavigation } from "@react-navigation/core";
 import moment from "moment";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import Modal from "react-native-modal";
 
 const ChatPreview = ({ id, users, loggedInUserEmail }) => {
-  const navigation = useNavigation();
+  const [modalVisible, setModalVisible] = useState(false);
 
-  const batch = db.batch();
+  const navigation = useNavigation();
 
   // use the function that filters out your email and leaves only your friend's email
   const friendEmail = getFriendEmail(users, loggedInUserEmail);
@@ -35,6 +36,11 @@ const ChatPreview = ({ id, users, loggedInUserEmail }) => {
       .orderBy("timestamp", "asc")
   );
 
+  // getting chat snapshot from the database so we can see if the chat has been deleted or not
+  const [chatSnapshot] = useCollection(db.collection("chats").doc(id));
+  const chatDeletedStatus =
+    chatSnapshot?.data().status[loggedInUserEmail].delete;
+
   // when a user clicks on their friend, navigate to chat screen
   const handleOpenChat = () => {
     // set the messages "read" property to true since opening the chat means they have read all the messages sent by the friend
@@ -55,6 +61,20 @@ const ChatPreview = ({ id, users, loggedInUserEmail }) => {
       friendName,
       friendEmail,
     });
+  };
+
+  // handle when a user clicks on the delete button
+  const handleDelete = () => {
+    // update the chat collection with the correct information, set the delete property to true for the logged in user
+    db.collection("chats")
+      .doc(id)
+      .set(
+        {
+          status: { [loggedInUserEmail]: { delete: true } },
+        },
+        { merge: true }
+      );
+    setModalVisible(false);
   };
 
   // get the information about the latest message from either yourself or your friend so that it displays on preview
@@ -83,7 +103,10 @@ const ChatPreview = ({ id, users, loggedInUserEmail }) => {
     });
 
     return (
-      <TouchableOpacity style={tw`bg-red-500 justify-center`}>
+      <TouchableOpacity
+        onPress={() => setModalVisible(true)}
+        style={tw`bg-red-500 justify-center`}
+      >
         <Animated.View
           style={[
             {
@@ -100,10 +123,30 @@ const ChatPreview = ({ id, users, loggedInUserEmail }) => {
 
   return (
     <>
+      {/* Modal - Delete chat */}
+      <Modal
+        isVisible={modalVisible}
+        onBackdropPress={() => setModalVisible(false)}
+      >
+        <View
+          style={tw`flex-1 justify-center items-center bg-white my-80 mx-5 px-6`}
+        >
+          <Text style={tw`font-medium text-lg`}>
+            Are you sure you want to delete this chat?
+          </Text>
+          <TouchableOpacity
+            onPress={handleDelete}
+            style={tw`bg-[#fff9bb] font-bold rounded-full px-15 py-2 mt-6`}
+          >
+            <Text style={tw`text-black`}>Confirm</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+
       <Swipeable renderRightActions={rightAction} friction={0.2}>
         <GestureHandlerRootView>
           {/* if there are any messages, show the preview, if not, nothing */}
-          {messagesSnapshotLength > 0 ? (
+          {messagesSnapshotLength > 0 && !chatDeletedStatus ? (
             <TouchableOpacity
               onPress={handleOpenChat}
               style={tw`border-b-2 border-gray-200`}

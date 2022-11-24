@@ -74,6 +74,10 @@ const HomeScreen = () => {
     ) {
       db.collection("chats").add({
         users: [loggedInUserEmail, addedEmail],
+        status: {
+          [loggedInUserEmail]: { delete: false },
+          [addedEmail]: { delete: false },
+        },
       });
     }
     setAddedEmail("");
