@@ -8,24 +8,28 @@ import {
 import React, { useState } from "react";
 import tw from "twrnc";
 import FriendAvatar from "./FriendAvatar";
-import { MagnifyingGlassIcon } from "react-native-heroicons/solid";
+import { MagnifyingGlassIcon, XMarkIcon } from "react-native-heroicons/solid";
 
 const SearchBar = ({ chatsSnapshot, loggedInUserEmail }) => {
   const [search, setSearch] = useState(false);
+  const [input, setInput] = useState("");
 
   // when a user clicks on the search icon, expand it to the right and bring the avatar to the bottom
   const handleSearch = () => {
+    // toggle the search UI
     setSearch(!search);
-    //
+    // reset the search input
+    setInput("");
   };
 
+  console.log(input);
   return (
     <View
       style={tw`bg-white pl-3 pb-8 border-gray-100 rounded-br-3xl rounded-bl-3xl border-b-4 border-l-2 border-r-2 z-5 
       ${search ? "" : "flex-row"}`}
     >
       {search ? (
-        <View style={tw`ml-2`}>
+        <View style={tw`ml-3 mb-3`}>
           <TouchableOpacity
             onPress={handleSearch}
             style={tw`w-80 h-15 flex-row items-center bg-gray-100 p-2 m-1 rounded-lg border-2 border-gray-200`}
@@ -33,15 +37,22 @@ const SearchBar = ({ chatsSnapshot, loggedInUserEmail }) => {
             <View style={tw`h-10 items-center justify-center`}>
               <MagnifyingGlassIcon color="gray" />
             </View>
-            <View style={tw` h-10 w-65 ml-2`}>
+            <View style={tw`h-10 w-60 ml-2`}>
               <TextInput
+                autoFocus={true}
                 placeholder="Search"
                 placeholderTextColor="gray"
-                // value={addedEmail}
-                // onChangeText={(text) => setAddedEmail(text)}
+                value={input}
+                onChangeText={(text) => setInput(text)}
                 style={tw`flex-1`}
               />
             </View>
+            <TouchableOpacity
+              onPress={handleSearch}
+              style={tw`h-10 items-center justify-center`}
+            >
+              <XMarkIcon color="gray" />
+            </TouchableOpacity>
           </TouchableOpacity>
         </View>
       ) : (
@@ -66,6 +77,7 @@ const SearchBar = ({ chatsSnapshot, loggedInUserEmail }) => {
             id={chat.id}
             users={chat.data().users}
             loggedInUserEmail={loggedInUserEmail}
+            input={input}
           />
         ))}
       </ScrollView>

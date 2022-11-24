@@ -7,7 +7,7 @@ import getFriendEmail from "../utils/getFriendEmail";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { useNavigation } from "@react-navigation/core";
 
-const FriendAvatar = ({ id, users, loggedInUserEmail }) => {
+const FriendAvatar = ({ id, users, loggedInUserEmail, input }) => {
   const navigation = useNavigation();
 
   // use the function that filters out your email and leaves only your friend's email
@@ -29,7 +29,6 @@ const FriendAvatar = ({ id, users, loggedInUserEmail }) => {
       .collection("messages")
       .orderBy("timestamp", "asc")
   );
-
   // when a user clicks on their friend, navigate to chat screen
   const handleOpenChat = () => {
     // set the messages "read" property to true since opening the chat means they have read all the messages sent by the friend
@@ -50,30 +49,36 @@ const FriendAvatar = ({ id, users, loggedInUserEmail }) => {
       friendEmail,
     });
   };
+
   return (
     <>
-      <View style={tw`ml-2`}>
-        <TouchableOpacity
-          onPress={handleOpenChat}
-          style={tw`w-15 h-15 justify-center items-center bg-gray-200 p-2 m-1 rounded-full`}
-        >
-          {friendAvatar ? (
-            <Image
-              source={{ uri: "data:image/jpeg;base64," + friendAvatar }}
-              style={tw`w-15 h-15 rounded-full border-2 border-gray-200`}
-            />
-          ) : (
-            <UserIcon color="black" />
-          )}
-        </TouchableOpacity>
-        <View style={tw`w-16 mt-1 justify-center items-center`}>
-          {friendName ? (
-            <Text style={tw`font-normal`}>{friendName}</Text>
-          ) : (
-            <Text style={tw`font-normal`}>{friendEmail}</Text>
-          )}
+      {/* if the name of the friend matches/includes the search input, display the avatar, if not, don't display it */}
+      {friendName.toLowerCase().includes(input) ? (
+        <View style={tw`ml-2`}>
+          <TouchableOpacity
+            onPress={handleOpenChat}
+            style={tw`w-15 h-15 justify-center items-center bg-gray-200 p-2 m-1 rounded-full`}
+          >
+            {friendAvatar ? (
+              <Image
+                source={{ uri: "data:image/jpeg;base64," + friendAvatar }}
+                style={tw`w-15 h-15 rounded-full border-2 border-gray-200`}
+              />
+            ) : (
+              <UserIcon color="black" />
+            )}
+          </TouchableOpacity>
+          <View style={tw`w-16 mt-1 justify-center items-center`}>
+            {friendName ? (
+              <Text style={tw`font-normal`}>{friendName}</Text>
+            ) : (
+              <Text style={tw`font-normal`}>{friendEmail}</Text>
+            )}
+          </View>
         </View>
-      </View>
+      ) : (
+        <></>
+      )}
     </>
   );
 };
