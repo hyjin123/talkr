@@ -23,6 +23,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import firebase from "firebase";
 import Messages from "../components/Messages";
 import TimeAgo from "react-native-timeago";
+import { LinearGradient } from "expo-linear-gradient";
 
 const ChatScreen = ({ route, navigation }) => {
   const [input, setInput] = useState("");
@@ -160,12 +161,12 @@ const ChatScreen = ({ route, navigation }) => {
 
           <View style={tw`flex-row w-30`}>
             <TouchableOpacity
-              style={tw`flex-1 items-center w-25 bg-[#fff9bb] p-2 m-1 rounded-full`}
+              style={tw`flex-1 items-center w-25 p-2 m-1 rounded-full`}
             >
               <VideoCameraIcon size={24} color="black" />
             </TouchableOpacity>
             <TouchableOpacity
-              style={tw`flex-1 items-center w-15 bg-[#fff9bb] p-2 m-1 rounded-full`}
+              style={tw`flex-1 items-center w-15 p-2 m-1 rounded-full`}
             >
               <PhoneIcon size={24} color="black" />
             </TouchableOpacity>
@@ -190,7 +191,7 @@ const ChatScreen = ({ route, navigation }) => {
             style={tw`h-14 border-2 border-r-0 items-center justify-center  border-gray-400 p-5 pl-2 rounded-l-3xl`}
           >
             <TouchableOpacity
-              style={tw`bg-[#fff9bb] rounded-full items-center justify-center w-10 h-10`}
+              style={tw`items-center justify-center w-10 h-10 rounded-full`}
             >
               <MicrophoneIcon size={22} color="black" />
             </TouchableOpacity>

@@ -145,13 +145,13 @@ const HomeScreen = () => {
           <View style={tw`flex-row w-30`}>
             <TouchableOpacity
               onPress={() => setModalVisible(true)}
-              style={tw`flex-1 items-center w-25 bg-[#fff9bb] p-2 m-1 rounded-full`}
+              style={tw`flex-1 items-center w-25 p-2 m-1`}
             >
               <PlusIcon size={24} color="black" />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => setSignoutModalVisible(true)}
-              style={tw`flex-1 items-center w-15 bg-[#fff9bb] p-2 m-1 rounded-full`}
+              style={tw`flex-1 items-center w-15 p-2 m-1`}
             >
               <ArrowTopRightOnSquareIcon size={24} color="black" />
             </TouchableOpacity>

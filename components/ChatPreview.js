@@ -1,6 +1,6 @@
 import { View, Text, Image, TouchableOpacity, Animated } from "react-native";
 import { db } from "../firebase";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import tw from "twrnc";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { UserIcon, TrashIcon } from "react-native-heroicons/solid";
@@ -13,6 +13,7 @@ import Modal from "react-native-modal";
 
 const ChatPreview = ({ id, users, loggedInUserEmail }) => {
   const [modalVisible, setModalVisible] = useState(false);
+  const swipeClose = useRef(null);
 
   const navigation = useNavigation();
 
@@ -75,6 +76,8 @@ const ChatPreview = ({ id, users, loggedInUserEmail }) => {
         { merge: true }
       );
     setModalVisible(false);
+    // close the swipeable after you delete the chat
+    swipeClose.current.close();
   };
 
   // get the information about the latest message from either yourself or your friend so that it displays on preview
@@ -143,7 +146,11 @@ const ChatPreview = ({ id, users, loggedInUserEmail }) => {
         </View>
       </Modal>
 
-      <Swipeable renderRightActions={rightAction} friction={0.2}>
+      <Swipeable
+        ref={swipeClose}
+        renderRightActions={rightAction}
+        friction={0.2}
+      >
         <GestureHandlerRootView>
           {/* if there are any messages, show the preview, if not, nothing */}
           {messagesSnapshotLength > 0 && !chatDeletedStatus ? (
