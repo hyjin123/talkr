@@ -41,10 +41,12 @@ const HomeScreen = () => {
 
   // user sign out
   const handleSignOut = () => {
+    setSignoutModalVisible(false);
+
     auth
       .signOut()
       .then(() => {
-        navigation.replace("Login");
+        navigation.navigate("Login");
       })
       .catch((error) => alert(error.message));
   };

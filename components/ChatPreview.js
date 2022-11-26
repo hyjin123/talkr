@@ -10,6 +10,7 @@ import moment from "moment";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Modal from "react-native-modal";
+import { LinearGradient } from "expo-linear-gradient";
 
 const ChatPreview = ({ id, users, loggedInUserEmail }) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -165,7 +166,7 @@ const ChatPreview = ({ id, users, loggedInUserEmail }) => {
                   {friendAvatar ? (
                     <Image
                       source={{ uri: "data:image/jpeg;base64," + friendAvatar }}
-                      style={tw`w-15 h-15 rounded-full border-2 border-gray-200`}
+                      style={tw`w-15 h-15 rounded-full border-2 border-purple-300`}
                     />
                   ) : (
                     <UserIcon color="black" />
@@ -198,11 +199,14 @@ const ChatPreview = ({ id, users, loggedInUserEmail }) => {
                     </Text>
                   </View>
                   {unreadMessagesCount > 0 ? (
-                    <View style={tw`p-2 mt-2 rounded-full bg-[#fff9bb]`}>
-                      <Text style={tw`text-center text-red-500`}>
+                    <LinearGradient
+                      colors={["#a8b8ff", "#bfbbf2", "#9ad8fc"]}
+                      style={tw`p-2 px-4 mt-2 rounded-full bg-[#fff9bb]`}
+                    >
+                      <Text style={tw`text-center font-bold text-white`}>
                         {unreadMessagesCount}
                       </Text>
-                    </View>
+                    </LinearGradient>
                   ) : (
                     <></>
                   )}

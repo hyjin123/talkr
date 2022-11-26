@@ -127,7 +127,7 @@ const ChatScreen = ({ route, navigation }) => {
               <View>
                 <Image
                   source={{ uri: "data:image/jpeg;base64," + friendAvatar }}
-                  style={tw`w-15 h-15 rounded-full border-2 border-gray-200`}
+                  style={tw`w-15 h-15 rounded-full border-2 border-purple-300`}
                 />
               </View>
             ) : (
