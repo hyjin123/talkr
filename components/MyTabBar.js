@@ -10,19 +10,20 @@ import {
   Cog6ToothIcon as Cog6ToothIconSolid,
   UsersIcon as UsersIconSolid,
 } from "react-native-heroicons/solid";
+import tw from "twrnc";
 
 const MyTabBar = ({ state, descriptors, navigation }) => {
   return (
     <SafeAreaView
       style={{
         flexDirection: "row",
-        backgroundColor: "#a8b8ff",
-        height: 70,
+        backgroundColor: "#a4b5fc",
+        height: 60,
         borderRadius: 50,
         justifyContent: "center",
         alignItems: "center",
-        margin: 10,
-        marginBottom: 35,
+        margin: 15,
+        marginBottom: 40,
       }}
     >
       {state.routes.map((route, index) => {

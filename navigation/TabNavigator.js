@@ -11,29 +11,35 @@ const TabNavigator = () => {
   const Tab = createBottomTabNavigator();
 
   return (
-    <Tab.Navigator tabBar={(props) => <MyTabBar {...props} />} labeled="false">
-      <Tab.Screen
-        name="Home"
-        options={{
-          headerShown: false,
-        }}
-        component={HomeScreen}
-      />
-      <Tab.Screen
-        name="Contacts"
-        options={{
-          headerShown: false,
-        }}
-        component={ContactsScreen}
-      />
-      <Tab.Screen
-        name="Settings"
-        options={{
-          headerShown: false,
-        }}
-        component={SettingScreen}
-      />
-    </Tab.Navigator>
+    // wrapped it in a view to change the background color of the tab navigator
+    <View style={[tw`flex-1`, { backgroundColor: "#f3f4f6" }]}>
+      <Tab.Navigator
+        tabBar={(props) => <MyTabBar {...props} />}
+        labeled="false"
+      >
+        <Tab.Screen
+          name="Home"
+          options={{
+            headerShown: false,
+          }}
+          component={HomeScreen}
+        />
+        <Tab.Screen
+          name="Contacts"
+          options={{
+            headerShown: false,
+          }}
+          component={ContactsScreen}
+        />
+        <Tab.Screen
+          name="Settings"
+          options={{
+            headerShown: false,
+          }}
+          component={SettingScreen}
+        />
+      </Tab.Navigator>
+    </View>
   );
 };
 
