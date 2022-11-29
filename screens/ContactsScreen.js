@@ -12,32 +12,23 @@ const ContactsScreen = () => {
   // get the logged in user email through auth
   const loggedInUserEmail = auth.currentUser.email;
 
-  // get all of the user's friend emails
-  const friendEmails = getFriendsEmails(loggedInUserEmail);
-
   useEffect(() => {
-    if (friendEmails) {
+    // get all of the user's friend emails
+    getFriendsEmails(loggedInUserEmail).then((friendEmails) => {
       getFriendsData(friendEmails).then((data) => {
-        setData1(data);
+        let tempArray = data.map((item) => {
+          return {
+            value: item.displayName,
+            key: item.displayName,
+            email: item.email,
+            lastSeen: item.lastSeen,
+            photoURL: item.photoURL,
+          };
+        });
+        setData1(tempArray);
       });
-    }
+    });
   }, []);
-
-  console.log("this is data finally..", data1);
-
-  const data = [
-    { value: "Lillie-Mai Allen", key: "lCUTs2" },
-    { value: "Emmanuel Goldstein", key: "TXdL0c" },
-    { value: "Winston Smith", key: "zqsiEw" },
-    { value: "William Blazkowicz", key: "psg2PM" },
-    { value: "Gordon Comstock", key: "1K6I18" },
-    { value: "Philip Ravelston", key: "NVHSkA" },
-    { value: "Rosemary Waterlow", key: "SaHqyG" },
-    { value: "Julia Comstock", key: "iaT1Ex" },
-    { value: "Mihai Maldonado", key: "OvMd5e" },
-    { value: "Murtaza Molina", key: "25zqAO" },
-    { value: "Peter Petigrew", key: "8cWuu3" },
-  ];
 
   return (
     <SafeAreaView style={tw`flex-1 items-center bg-white`}>
@@ -56,7 +47,7 @@ const ContactsScreen = () => {
       {/* Body */}
       <View style={tw`flex-1 bg-gray-100`}>
         <AlphabetList
-          data={data}
+          data={data1}
           indexLetterStyle={{
             color: "blue",
             fontSize: 15,

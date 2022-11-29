@@ -2,11 +2,16 @@ import getFriendEmail from "./getFriendEmail";
 import { auth, db } from "../firebase";
 import { useCollection } from "react-firebase-hooks/firestore";
 
-export const getFriendsEmails = (loggedInUserEmail) => {
+export const getFriendsEmails = async (loggedInUserEmail) => {
+  let chatsSnapshot = [];
   // get a chat collection snapchat from firebase
-  const [chatsSnapshot] = useCollection(
-    db.collection("chats").where("users", "array-contains", loggedInUserEmail)
-  );
+  await db
+    .collection("chats")
+    .where("users", "array-contains", loggedInUserEmail)
+    .get()
+    .then((data) => {
+      chatsSnapshot = data;
+    });
 
   // prop the data for alphabet list
   // get all the friend's email first
