@@ -1,6 +1,5 @@
 import getFriendEmail from "./getFriendEmail";
-import { auth, db } from "../firebase";
-import { useCollection } from "react-firebase-hooks/firestore";
+import { db } from "../firebase";
 
 export const getFriendsEmails = async (loggedInUserEmail) => {
   let chatsSnapshot = [];

@@ -1,10 +1,11 @@
-import { View, Text, SafeAreaView } from "react-native";
+import { View, Text, SafeAreaView, Image } from "react-native";
 import React, { useEffect, useMemo, useState } from "react";
 import tw from "twrnc";
 import ContactsSearchBar from "../components/ContactsSearchBar";
 import { AlphabetList } from "react-native-section-alphabet-list";
 import { auth, db } from "../firebase";
 import { getFriendsEmails, getFriendsData } from "../utils/getFriendData";
+import TimeAgo from "react-native-timeago";
 
 const ContactsScreen = () => {
   const [data1, setData1] = useState([]);
@@ -45,21 +46,42 @@ const ContactsScreen = () => {
       </View>
 
       {/* Body */}
-      <View style={tw`flex-1 bg-gray-100`}>
+      <View style={tw`flex-1 bg-gray-100 w-full pl-10 pr-5 pt-5`}>
         <AlphabetList
           data={data1}
           indexLetterStyle={{
-            color: "blue",
+            color: "#787775",
             fontSize: 15,
           }}
+          style={tw`flex-1`}
           renderCustomItem={(item) => (
-            <View>
-              <Text>{item.value}</Text>
+            <View style={tw`flex-row my-3`}>
+              <View style={tw`mr-3`}>
+                <Image
+                  source={{ uri: "data:image/jpeg;base64," + item.photoURL }}
+                  style={[
+                    tw`w-15 h-15 rounded-full border-2`,
+                    { borderColor: "#a8b8ff" },
+                  ]}
+                />
+              </View>
+              <View style={tw`justify-center`}>
+                <Text style={tw`font-semibold text-base`}>{item.value}</Text>
+                <Text style={tw`text-gray-800`}>{item.email}</Text>
+                <Text style={tw`text-gray-500`}>
+                  Last Active: {""}
+                  <TimeAgo time={item.lastSeen.toDate()} />
+                </Text>
+              </View>
             </View>
           )}
           renderCustomSectionHeader={(section) => (
             <View>
-              <Text style={tw`text-red-500`}>{section.title}</Text>
+              <Text
+                style={{ color: "#a4b5fc", fontWeight: "bold", fontSize: "20" }}
+              >
+                {section.title}
+              </Text>
             </View>
           )}
         />
