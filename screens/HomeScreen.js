@@ -19,10 +19,10 @@ import {
 } from "react-native-heroicons/solid";
 import ChatPreview from "../components/ChatPreview";
 import SearchBar from "../components/SearchBar";
+import AddFriendModal from "../components/AddFriendModal";
 
 const HomeScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [addedEmail, setAddedEmail] = useState("");
   const [signoutModalVisible, setSignoutModalVisible] = useState(false);
 
   const navigation = useNavigation();
@@ -36,7 +36,7 @@ const HomeScreen = () => {
     db.collection("users").where("email", "==", loggedInUserEmail)
   );
 
-  // get the user info
+  // get the user info, to display their name in the header***
   const user = userSnapshot?.docs?.[0]?.data();
 
   // user sign out
@@ -57,64 +57,16 @@ const HomeScreen = () => {
     db.collection("chats").where("users", "array-contains", loggedInUserEmail)
   );
 
-  // console.log(chatsSnapshot?.docs?.[0]?.data());
-
-  // check to see if the chat collection already exists in the database
-  const doesChatExist = (addedEmail) => {
-    return !!chatsSnapshot?.docs.find(
-      (chat) =>
-        chat.data().users.find((user) => user === addedEmail)?.length > 0
-    );
-  };
-
-  const creatChat = () => {
-    // check to see if email is in correct format
-    if (
-      EmailValidator.validate(addedEmail) &&
-      addedEmail !== loggedInUserEmail &&
-      !doesChatExist(addedEmail)
-    ) {
-      db.collection("chats").add({
-        users: [loggedInUserEmail, addedEmail],
-        status: {
-          [loggedInUserEmail]: { delete: false },
-          [addedEmail]: { delete: false },
-        },
-      });
-    }
-    setAddedEmail("");
-    setModalVisible(false);
-  };
-
   return (
     <>
       {/* this SafeAreaView is set so that the top of the screen's background remains white */}
       <SafeAreaView style={tw`flex-0 bg-white`} />
       <SafeAreaView style={tw`bg-gray-100 flex-1`}>
         {/* Modal - Add friend */}
-        <Modal
-          isVisible={modalVisible}
-          onBackdropPress={() => setModalVisible(false)}
-        >
-          <View
-            style={tw`flex-1 justify-center items-center bg-white my-80 mx-5`}
-          >
-            <Text>Add a Friend</Text>
-            <TextInput
-              placeholder="Enter Email"
-              placeholderTextColor="gray"
-              value={addedEmail}
-              onChangeText={(text) => setAddedEmail(text)}
-              style={tw`border-2 border-gray-300 rounded-full py-1 w-50 p-2 mt-3`}
-            />
-            <TouchableOpacity
-              onPress={creatChat}
-              style={tw`bg-[#fff9bb] font-bold rounded-full px-15 py-2 mt-6`}
-            >
-              <Text style={tw`text-black`}>ADD</Text>
-            </TouchableOpacity>
-          </View>
-        </Modal>
+        <AddFriendModal
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+        />
 
         {/* Modal - Signout */}
         <Modal

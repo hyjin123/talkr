@@ -5,7 +5,7 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import tw from "twrnc";
 import { auth, db } from "../firebase";
 import { useCollection } from "react-firebase-hooks/firestore";
@@ -15,8 +15,13 @@ import {
   UserIcon,
   CameraIcon,
 } from "react-native-heroicons/solid";
+import { useNavigation } from "@react-navigation/core";
+import AddFriendModal from "../components/AddFriendModal";
 
 const SettingScreen = () => {
+  const [modalVisible, setModalVisible] = useState(false);
+  const navigation = useNavigation();
+
   // get the logged in user email through auth
   const loggedInUserEmail = auth.currentUser.email;
 
@@ -31,6 +36,12 @@ const SettingScreen = () => {
 
   return (
     <SafeAreaView style={tw`flex-1 items-center bg-gray-100`}>
+      {/* Modal - Add friend */}
+      <AddFriendModal
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+      />
+
       {/* Heading */}
       <View style={tw`my-6`}>
         <Text style={tw`font-semibold text-3xl`}>Setting</Text>
@@ -67,10 +78,16 @@ const SettingScreen = () => {
         </View>
 
         <View style={tw`flex-row w-50 justify-between`}>
-          <TouchableOpacity style={tw`rounded-full p-3 bg-[#90bef5]`}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Home")}
+            style={tw`rounded-full p-3 bg-[#90bef5]`}
+          >
             <ChatBubbleLeftRightIcon size={36} color="white" />
           </TouchableOpacity>
-          <TouchableOpacity style={tw`rounded-full p-3 bg-[#97f0b9]`}>
+          <TouchableOpacity
+            onPress={() => setModalVisible(true)}
+            style={tw`rounded-full p-3 bg-[#97f0b9]`}
+          >
             <UserPlusIcon size={36} color="white" />
           </TouchableOpacity>
         </View>
