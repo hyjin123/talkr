@@ -73,7 +73,7 @@ const ContactsScreen = () => {
                   source={{ uri: "data:image/jpeg;base64," + item.photoURL }}
                   style={[
                     tw`w-15 h-15 rounded-full border-2`,
-                    { borderColor: "#a8b8ff" },
+                    { borderColor: "#cad4fc" },
                   ]}
                 />
               </View>

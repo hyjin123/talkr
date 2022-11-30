@@ -64,7 +64,7 @@ const FriendAvatar = ({ id, users, loggedInUserEmail, input }) => {
                 source={{ uri: "data:image/jpeg;base64," + friendAvatar }}
                 style={[
                   tw`w-15 h-15 rounded-full border-2`,
-                  { borderColor: "#a8b8ff" },
+                  { borderColor: "#cad4fc" },
                 ]}
               />
             ) : (

@@ -17,7 +17,7 @@ const MyTabBar = ({ state, descriptors, navigation }) => {
     <SafeAreaView
       style={{
         flexDirection: "row",
-        backgroundColor: "#a4b5fc",
+        backgroundColor: "#cad4fc",
         height: 60,
         borderRadius: 50,
         justifyContent: "center",
