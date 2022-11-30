@@ -9,13 +9,17 @@ import React, { useState } from "react";
 import tw from "twrnc";
 import { MagnifyingGlassIcon, XMarkIcon } from "react-native-heroicons/solid";
 
-const ContactsSearchBar = () => {
-  const [input, setInput] = useState("");
+const ContactsSearchBar = ({ input, setInput }) => {
+  // when a user clicks on the search icon, expand it to the right and bring the avatar to the bottom
+  const handleSearch = () => {
+    // reset the search input
+    setInput("");
+  };
 
   return (
     <View style={tw`ml-3 mb-3`}>
       <TouchableOpacity
-        // onPress={handleSearch}
+        onPress={handleSearch}
         style={tw`w-80 h-15 flex-row items-center bg-gray-100 p-2 m-1 rounded-lg border-2 border-gray-200`}
       >
         <View style={tw`h-10 items-center justify-center`}>
@@ -31,7 +35,7 @@ const ContactsSearchBar = () => {
           />
         </View>
         <TouchableOpacity
-          // onPress={handleSearch}
+          onPress={handleSearch}
           style={tw`h-10 items-center justify-center`}
         >
           <XMarkIcon color="gray" />

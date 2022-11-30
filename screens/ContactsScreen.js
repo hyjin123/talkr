@@ -9,6 +9,8 @@ import TimeAgo from "react-native-timeago";
 
 const ContactsScreen = () => {
   const [data1, setData1] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+  const [input, setInput] = useState("");
 
   // get the logged in user email through auth
   const loggedInUserEmail = auth.currentUser.email;
@@ -29,7 +31,16 @@ const ContactsScreen = () => {
         setData1(tempArray);
       });
     });
-  }, []);
+
+    // once data is in the correct format, filter it based on the search
+    // only run this if user searches something
+    if (input.length > 0) {
+      const filteredData = data1.filter((friend) =>
+        friend.value.toLowerCase().includes(input)
+      );
+      setFilteredData(filteredData);
+    }
+  }, [input]);
 
   return (
     <SafeAreaView style={tw`flex-1 items-center bg-white`}>
@@ -41,14 +52,15 @@ const ContactsScreen = () => {
 
         {/* Search Bar */}
         <View>
-          <ContactsSearchBar />
+          <ContactsSearchBar input={input} setInput={setInput} />
         </View>
       </View>
 
       {/* Body */}
       <View style={tw`flex-1 bg-gray-100 w-full pl-10 pr-5 pt-5`}>
         <AlphabetList
-          data={data1}
+          // if user input is there, show filtered data, if not show all data (regular)
+          data={input.length > 0 ? filteredData : data1}
           indexLetterStyle={{
             color: "#787775",
             fontSize: 15,
