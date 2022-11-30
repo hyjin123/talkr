@@ -14,6 +14,9 @@ import {
   UserPlusIcon,
   UserIcon,
   CameraIcon,
+  PencilSquareIcon,
+  WrenchScrewdriverIcon,
+  ChevronRightIcon,
 } from "react-native-heroicons/solid";
 import { useNavigation } from "@react-navigation/core";
 import AddFriendModal from "../components/AddFriendModal";
@@ -78,19 +81,57 @@ const SettingScreen = () => {
         </View>
 
         <View style={tw`flex-row w-50 justify-between`}>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("Home")}
-            style={tw`rounded-full p-3 bg-[#90bef5]`}
-          >
-            <ChatBubbleLeftRightIcon size={36} color="white" />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => setModalVisible(true)}
-            style={tw`rounded-full p-3 bg-[#97f0b9]`}
-          >
-            <UserPlusIcon size={36} color="white" />
-          </TouchableOpacity>
+          <View style={tw`items-center`}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Home")}
+              style={tw`rounded-full p-3 bg-[#90bef5] mb-1`}
+            >
+              <ChatBubbleLeftRightIcon size={36} color="white" />
+            </TouchableOpacity>
+            <Text style={tw`text-gray-500`}>Chat</Text>
+          </View>
+
+          <View style={tw`items-center`}>
+            <TouchableOpacity
+              onPress={() => setModalVisible(true)}
+              style={tw`rounded-full p-3 bg-[#97f0b9] mb-1`}
+            >
+              <UserPlusIcon size={36} color="white" />
+            </TouchableOpacity>
+            <Text style={tw`text-gray-500`}>Add Friend</Text>
+          </View>
         </View>
+      </View>
+
+      {/* Edit Profile */}
+      <View style={tw`mt-5`}>
+        <TouchableOpacity
+          style={tw`flex-row items-center justify-between w-80 border-2 mb-3 px-3 py-4 rounded-xl border-gray-200`}
+        >
+          <View style={tw`rounded-full p-2 bg-[#d4c2ed]`}>
+            <PencilSquareIcon size={24} color="white" />
+          </View>
+          <View style={tw`flex-1 pl-5`}>
+            <Text>Edit Status</Text>
+          </View>
+          <View>
+            <ChevronRightIcon size={24} color="#8e8f91" />
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={tw`flex-row items-center justify-between w-80 border-2 mb-3 px-3 py-4 rounded-xl border-gray-200`}
+        >
+          <View style={tw`rounded-full p-2 bg-[#abdfed]`}>
+            <WrenchScrewdriverIcon size={24} color="white" />
+          </View>
+          <View style={tw`flex-1 pl-5`}>
+            <Text>Edit Theme</Text>
+          </View>
+          <View>
+            <ChevronRightIcon size={24} color="#8e8f91" />
+          </View>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );

@@ -52,6 +52,7 @@ const AddFriendModal = ({ modalVisible, setModalVisible }) => {
           [addedEmail]: { delete: false },
         },
       });
+      Alert.alert("Successfully Added!");
     } else {
       Alert.alert("User is already added or User does not exist");
     }
