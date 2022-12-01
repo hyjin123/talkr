@@ -26,7 +26,6 @@ import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
 
 const SettingScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [compressedImage, setCompressedImage] = useState(null);
 
   const navigation = useNavigation();
 
@@ -67,19 +66,16 @@ const SettingScreen = () => {
       }
     );
 
-    setCompressedImage(manipResult);
-    Alert.alert("Photo successfully uploaded!");
-  };
-
-  // once user "sets" compressed image, reset their profile pic when the component re-renders so that it changes on their view
-  if (compressedImage !== null) {
+    // reset their profile pic when the component re-renders so that it changes on their view
     db.collection("users").doc(userId).set(
       {
-        photoURL: compressedImage.base64,
+        photoURL: manipResult.base64,
       },
       { merge: true }
     );
-  }
+
+    Alert.alert("Photo successfully uploaded!");
+  };
 
   return (
     <SafeAreaView style={tw`flex-1 items-center bg-gray-100`}>
