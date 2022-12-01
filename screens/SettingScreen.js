@@ -4,6 +4,7 @@ import {
   SafeAreaView,
   Image,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import React, { useState } from "react";
 import tw from "twrnc";
@@ -20,9 +21,13 @@ import {
 } from "react-native-heroicons/solid";
 import { useNavigation } from "@react-navigation/core";
 import AddFriendModal from "../components/AddFriendModal";
+import * as ImagePicker from "expo-image-picker";
+import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
 
 const SettingScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [compressedImage, setCompressedImage] = useState(null);
+
   const navigation = useNavigation();
 
   // get the logged in user email through auth
@@ -34,8 +39,47 @@ const SettingScreen = () => {
   );
 
   const user = userSnapshot?.docs?.[0]?.data();
+  const userId = userSnapshot?.docs?.[0].id;
 
-  console.log(user);
+  // user picking an image for their avatar
+  const pickImage = async () => {
+    // User picks an image from their phone gallery
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+      base64: true,
+    });
+
+    if (result.canceled) {
+      return;
+    }
+
+    // compresses and resizes the image so that it fits into firebase database
+    const manipResult = await manipulateAsync(
+      result.assets[0].uri,
+      [{ resize: { width: 120, height: 120 } }],
+      {
+        compress: 0.2,
+        base64: true,
+        format: SaveFormat.PNG,
+      }
+    );
+
+    setCompressedImage(manipResult);
+    Alert.alert("Photo successfully uploaded!");
+  };
+
+  // once user "sets" compressed image, reset their profile pic when the component re-renders so that it changes on their view
+  if (compressedImage !== null) {
+    db.collection("users").doc(userId).set(
+      {
+        photoURL: compressedImage.base64,
+      },
+      { merge: true }
+    );
+  }
 
   return (
     <SafeAreaView style={tw`flex-1 items-center bg-gray-100`}>
@@ -72,7 +116,7 @@ const SettingScreen = () => {
             <UserIcon color="black" size={40} />
           )}
         </View>
-        <TouchableOpacity style={tw`mt-14`}>
+        <TouchableOpacity onPress={pickImage} style={tw`mt-14`}>
           <CameraIcon size={30} color="#c4c4c4" />
         </TouchableOpacity>
         <View style={tw`mt-2 mb-8 items-center`}>

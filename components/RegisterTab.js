@@ -4,8 +4,6 @@ import {
   SafeAreaView,
   TextInput,
   TouchableOpacity,
-  Button,
-  Image,
   Alert,
 } from "react-native";
 import React, { useEffect, useState } from "react";
@@ -21,8 +19,6 @@ const RegisterTab = () => {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [image, setImage] = useState(null);
-  const [image64, setImage64] = useState(null);
   const [compressedImage, setCompressedImage] = useState(null);
 
   const navigation = useNavigation();
