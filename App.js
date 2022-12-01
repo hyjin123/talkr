@@ -2,8 +2,11 @@ import { NavigationContainer } from "@react-navigation/native";
 import StackNavigator from "./navigation/StackNavigator";
 import { KeyboardAvoidingView } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { LogBox } from "react-native";
 
 export default function App() {
+  LogBox.ignoreAllLogs();
+
   return (
     <NavigationContainer>
       <KeyboardAvoidingView

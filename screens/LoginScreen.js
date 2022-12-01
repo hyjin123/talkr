@@ -22,7 +22,7 @@ const LoginScreen = () => {
         <View style={tw`flex-row justify-evenly items-center mb-5`}>
           <TouchableOpacity
             style={tw`${
-              selectedTab === "login" && "border-b-2 border-gray-600"
+              selectedTab === "login" ? "border-b-2 border-gray-600" : ""
             } p-3`}
             onPress={() => setSelectedTab("login")}
           >

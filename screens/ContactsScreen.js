@@ -72,15 +72,15 @@ const ContactsScreen = () => {
                 <Image
                   source={{ uri: "data:image/jpeg;base64," + item.photoURL }}
                   style={[
-                    tw`w-15 h-15 rounded-full border-2`,
+                    tw`w-12 h-12 rounded-full border-2`,
                     { borderColor: "#cad4fc" },
                   ]}
                 />
               </View>
               <View style={tw`justify-center`}>
                 <Text style={tw`font-semibold text-base`}>{item.value}</Text>
-                <Text style={tw`text-gray-800`}>{item.email}</Text>
-                <Text style={tw`text-gray-500`}>
+                <Text style={tw`text-gray-800 text-xs`}>{item.email}</Text>
+                <Text style={tw`text-gray-500 text-xs`}>
                   Last Active: {""}
                   <TimeAgo time={item.lastSeen.toDate()} />
                 </Text>
@@ -90,7 +90,7 @@ const ContactsScreen = () => {
           renderCustomSectionHeader={(section) => (
             <View>
               <Text
-                style={{ color: "#a4b5fc", fontWeight: "bold", fontSize: "20" }}
+                style={{ color: "#a4b5fc", fontWeight: "bold", fontSize: "18" }}
               >
                 {section.title}
               </Text>

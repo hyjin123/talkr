@@ -5,6 +5,7 @@ import {
   Image,
   TouchableOpacity,
   Alert,
+  ScrollView,
 } from "react-native";
 import React, { useState } from "react";
 import tw from "twrnc";
@@ -18,14 +19,19 @@ import {
   PencilSquareIcon,
   WrenchScrewdriverIcon,
   ChevronRightIcon,
+  ArrowTopRightOnSquareIcon,
+  QuestionMarkCircleIcon,
 } from "react-native-heroicons/solid";
 import { useNavigation } from "@react-navigation/core";
 import AddFriendModal from "../components/AddFriendModal";
 import * as ImagePicker from "expo-image-picker";
 import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
+import Modal from "react-native-modal";
 
 const SettingScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [signoutModalVisible, setSignoutModalVisible] = useState(false);
+  const [helpModalVisible, setHelpModalVisible] = useState(false);
 
   const navigation = useNavigation();
 
@@ -77,6 +83,20 @@ const SettingScreen = () => {
     Alert.alert("Photo successfully uploaded!");
   };
 
+  // user sign out
+  const handleSignOut = () => {
+    setSignoutModalVisible(false);
+
+    auth
+      .signOut()
+      .then(() => {
+        navigation.navigate("Login");
+      })
+      .catch((error) => alert(error.message));
+  };
+
+  // help modal
+
   return (
     <SafeAreaView style={tw`flex-1 items-center bg-gray-100`}>
       {/* Modal - Add friend */}
@@ -85,6 +105,40 @@ const SettingScreen = () => {
         setModalVisible={setModalVisible}
       />
 
+      {/* Modal - Signout */}
+      <Modal
+        isVisible={signoutModalVisible}
+        onBackdropPress={() => setSignoutModalVisible(false)}
+      >
+        <View
+          style={tw`flex-1 justify-center items-center bg-white my-80 mx-5`}
+        >
+          <Text style={tw`font-medium text-lg`}>
+            Are you sure you want to sign out?
+          </Text>
+          <TouchableOpacity
+            onPress={handleSignOut}
+            style={tw`bg-[#fff9bb] font-bold rounded-full px-15 py-2 mt-6`}
+          >
+            <Text style={tw`text-black`}>Confirm</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+
+      {/* Modal - Help */}
+      <Modal
+        isVisible={helpModalVisible}
+        onBackdropPress={() => setHelpModalVisible(false)}
+      >
+        <View
+          style={tw`flex-1 justify-center items-center bg-white my-80 mx-2 px-2`}
+        >
+          <Text style={tw`font-base text-lg`}>
+            Please email seanhoyeonjin@gmail.com if you have any questions.
+          </Text>
+        </View>
+      </Modal>
+
       {/* Heading */}
       <View style={tw`my-6`}>
         <Text style={tw`font-semibold text-3xl`}>Setting</Text>
@@ -92,7 +146,7 @@ const SettingScreen = () => {
 
       {/* Profile Information */}
       <View
-        style={tw`border-2 w-80 h-70 items-center mt-18 bg-white border-gray-200 rounded-2xl`}
+        style={tw`border-2 w-80 h-70 items-center mt-12 bg-white border-gray-200 rounded-2xl`}
       >
         <View
           style={[
@@ -144,7 +198,7 @@ const SettingScreen = () => {
       </View>
 
       {/* Edit Profile */}
-      <View style={tw`mt-5`}>
+      <ScrollView style={tw`mt-5`}>
         <TouchableOpacity
           style={tw`flex-row items-center justify-between w-80 border-2 mb-3 px-3 py-4 rounded-xl border-gray-200`}
         >
@@ -162,7 +216,7 @@ const SettingScreen = () => {
         <TouchableOpacity
           style={tw`flex-row items-center justify-between w-80 border-2 mb-3 px-3 py-4 rounded-xl border-gray-200`}
         >
-          <View style={tw`rounded-full p-2 bg-[#abdfed]`}>
+          <View style={tw`rounded-full p-2 bg-[#f2ca8d]`}>
             <WrenchScrewdriverIcon size={24} color="white" />
           </View>
           <View style={tw`flex-1 pl-5`}>
@@ -172,7 +226,35 @@ const SettingScreen = () => {
             <ChevronRightIcon size={24} color="#8e8f91" />
           </View>
         </TouchableOpacity>
-      </View>
+        <TouchableOpacity
+          onPress={() => setHelpModalVisible(true)}
+          style={tw`flex-row items-center justify-between w-80 border-2 mb-3 px-3 py-4 rounded-xl border-gray-200`}
+        >
+          <View style={tw`rounded-full p-2 bg-[#abdfed]`}>
+            <QuestionMarkCircleIcon size={24} color="white" />
+          </View>
+          <View style={tw`flex-1 pl-5`}>
+            <Text>Help</Text>
+          </View>
+          <View>
+            <ChevronRightIcon size={24} color="#8e8f91" />
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => setSignoutModalVisible(true)}
+          style={tw`flex-row items-center justify-between w-80 border-2 mb-3 px-3 py-4 rounded-xl border-gray-200`}
+        >
+          <View style={tw`rounded-full p-2 bg-[#f27480]`}>
+            <ArrowTopRightOnSquareIcon size={24} color="white" />
+          </View>
+          <View style={tw`flex-1 pl-5`}>
+            <Text>Sign Out</Text>
+          </View>
+          <View>
+            <ChevronRightIcon size={24} color="#8e8f91" />
+          </View>
+        </TouchableOpacity>
+      </ScrollView>
     </SafeAreaView>
   );
 };
