@@ -27,9 +27,12 @@ import AddFriendModal from "../components/AddFriendModal";
 import * as ImagePicker from "expo-image-picker";
 import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
 import Modal from "react-native-modal";
+import ChooseThemeModal from "../components/ChooseThemeModal";
 
 const SettingScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [themeModalVisible, setThemeModalVisible] = useState(false);
+
   const [signoutModalVisible, setSignoutModalVisible] = useState(false);
   const [helpModalVisible, setHelpModalVisible] = useState(false);
 
@@ -105,13 +108,19 @@ const SettingScreen = () => {
         setModalVisible={setModalVisible}
       />
 
+      {/* Modal - Choose Theme */}
+      <ChooseThemeModal
+        themeModalVisible={themeModalVisible}
+        setThemeModalVisible={setThemeModalVisible}
+      />
+
       {/* Modal - Signout */}
       <Modal
         isVisible={signoutModalVisible}
         onBackdropPress={() => setSignoutModalVisible(false)}
       >
         <View
-          style={tw`flex-1 justify-center items-center bg-white my-80 mx-5`}
+          style={tw`flex-1 justify-center items-center bg-white my-80 mx-5 rounded-xl`}
         >
           <Text style={tw`font-medium text-lg`}>
             Are you sure you want to sign out?
@@ -131,9 +140,9 @@ const SettingScreen = () => {
         onBackdropPress={() => setHelpModalVisible(false)}
       >
         <View
-          style={tw`flex-1 justify-center items-center bg-white my-80 mx-2 px-2`}
+          style={tw`flex-1 justify-center items-center bg-white my-80 mx-2 px-2 rounded-xl`}
         >
-          <Text style={tw`font-base text-lg`}>
+          <Text style={tw`text-lg`}>
             Please email seanhoyeonjin@gmail.com if you have any questions.
           </Text>
         </View>
@@ -214,6 +223,7 @@ const SettingScreen = () => {
         </TouchableOpacity>
 
         <TouchableOpacity
+          onPress={() => setThemeModalVisible(true)}
           style={tw`flex-row items-center justify-between w-80 border-2 mb-3 px-3 py-4 rounded-xl border-gray-200`}
         >
           <View style={tw`rounded-full p-2 bg-[#f2ca8d]`}>

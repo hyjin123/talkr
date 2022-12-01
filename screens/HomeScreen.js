@@ -74,7 +74,7 @@ const HomeScreen = () => {
           onBackdropPress={() => setSignoutModalVisible(false)}
         >
           <View
-            style={tw`flex-1 justify-center items-center bg-white my-80 mx-5`}
+            style={tw`flex-1 justify-center items-center bg-white my-80 mx-5 rounded-xl`}
           >
             <Text style={tw`font-medium text-lg`}>
               Are you sure you want to sign out?

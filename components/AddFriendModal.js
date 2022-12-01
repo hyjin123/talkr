@@ -66,7 +66,9 @@ const AddFriendModal = ({ modalVisible, setModalVisible }) => {
       isVisible={modalVisible}
       onBackdropPress={() => setModalVisible(false)}
     >
-      <View style={tw`flex-1 justify-center items-center bg-white my-80 mx-5`}>
+      <View
+        style={tw`flex-1 justify-center items-center bg-white my-80 mx-5 rounded-xl`}
+      >
         <Text>Add a Friend</Text>
         <TextInput
           placeholder="Enter Email"
