@@ -29,7 +29,7 @@ import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
 import Modal from "react-native-modal";
 import ChooseThemeModal from "../components/ChooseThemeModal";
 
-const SettingScreen = ({ theme }) => {
+const SettingScreen = ({ theme, setThemeChange }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [themeModalVisible, setThemeModalVisible] = useState(false);
 
@@ -114,6 +114,7 @@ const SettingScreen = ({ theme }) => {
         themeModalVisible={themeModalVisible}
         setThemeModalVisible={setThemeModalVisible}
         theme={theme}
+        setThemeChange={setThemeChange}
       />
 
       {/* Modal - Signout */}

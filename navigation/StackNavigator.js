@@ -12,6 +12,7 @@ const StackNavigator = () => {
     primary: ["#cad4fc"],
     message: ["#a8b8ff", "#bfbbf2", "#9ad8fc"],
   });
+  const [themeChange, setThemeChange] = useState([]);
 
   const Stack = createNativeStackNavigator();
 
@@ -30,7 +31,7 @@ const StackNavigator = () => {
           setTheme(userTheme);
         });
     }
-  }, [loggedInUserEmail]);
+  }, [loggedInUserEmail, themeChange]);
 
   return (
     <Stack.Navigator>
@@ -47,7 +48,13 @@ const StackNavigator = () => {
       />
 
       <Stack.Screen name="TabNavigator" options={{ headerShown: false }}>
-        {(props) => <TabNavigator {...props} theme={theme} />}
+        {(props) => (
+          <TabNavigator
+            {...props}
+            theme={theme}
+            setThemeChange={setThemeChange}
+          />
+        )}
       </Stack.Screen>
 
       <Stack.Screen name="Chat" options={{ headerShown: false }}>

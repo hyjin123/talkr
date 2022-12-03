@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View } from "react-native";
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from "../screens/HomeScreen";
@@ -7,7 +7,7 @@ import ContactsScreen from "../screens/ContactsScreen";
 import MyTabBar from "../components/MyTabBar";
 import tw from "twrnc";
 
-const TabNavigator = ({ theme }) => {
+const TabNavigator = ({ theme, setThemeChange }) => {
   const Tab = createBottomTabNavigator();
 
   return (
@@ -41,7 +41,13 @@ const TabNavigator = ({ theme }) => {
             headerShown: false,
           }}
         >
-          {(props) => <SettingScreen {...props} theme={theme} />}
+          {(props) => (
+            <SettingScreen
+              {...props}
+              theme={theme}
+              setThemeChange={setThemeChange}
+            />
+          )}
         </Tab.Screen>
       </Tab.Navigator>
     </View>

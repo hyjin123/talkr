@@ -2,21 +2,44 @@ import { View, Text, TouchableOpacity, TextInput, Alert } from "react-native";
 import React, { useState } from "react";
 import tw from "twrnc";
 import { auth, db } from "../firebase";
-import { useCollection } from "react-firebase-hooks/firestore";
 import Modal from "react-native-modal";
 import { XMarkIcon } from "react-native-heroicons/solid";
 import { LinearGradient } from "expo-linear-gradient";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 const ChooseThemeModal = ({
   themeModalVisible,
   setThemeModalVisible,
   theme,
+  setThemeChange,
 }) => {
-  const [theme1, setTheme1] = useState([]);
   const [active, setActive] = useState(null);
 
+  // get user information in order to get user.iud (this will help set the last active status)
+  const [user] = useAuthState(auth);
+
+  const themeColors = {
+    piggyBank: { primary: ["#e8cfd2"], message: ["#ee9ca7", "#ffdde1"] },
+    citrusPeel: { primary: ["#f0dca5"], message: ["#FDC830", "#F37335"] },
+    scooter: { primary: ["#aee7eb"], message: ["#36D1DC", "#5B86E5"] },
+    sulphur: { primary: ["#8ce6db"], message: ["#00b09b", "#96c93d"] },
+    atlas: { primary: ["#fad2ac"], message: ["#FEAC5E", "#C779D0", "#4BC0C8"] },
+  };
+
   const handleThemeChange = () => {
+    // find out what the user selected
+    const setTheme = themeColors[active];
+
     // set theme property in users collection
+    db.collection("users").doc(user.uid).set(
+      {
+        theme: setTheme,
+      },
+      { merge: true }
+    );
+
+    setThemeChange(setTheme);
+    setThemeModalVisible(false);
   };
 
   return (
@@ -48,7 +71,7 @@ const ChooseThemeModal = ({
               start={[0, 1]}
               end={[1, 0]}
               style={tw`bg-white border-0 py-5 mx-5 mt-2 rounded-lg w-60 ml-auto mr-auto bg-[#fff9bb] ${
-                active === "piggyBank" && "border-2"
+                active === "piggyBank" ? "border-2" : ""
               }`}
             >
               <Text style={tw`text-white text-center`}>Piggy Pink</Text>
@@ -64,7 +87,7 @@ const ChooseThemeModal = ({
               start={[0, 1]}
               end={[1, 0]}
               style={tw`bg-white border-0 py-5 mx-5 mt-2 rounded-lg w-60 ml-auto mr-auto bg-[#fff9bb] ${
-                active === "citrusPeel" && "border-2"
+                active === "citrusPeel" ? "border-2" : ""
               }`}
             >
               <Text style={tw`text-white text-center`}>Citrus Peel</Text>
@@ -80,7 +103,7 @@ const ChooseThemeModal = ({
               start={[0, 1]}
               end={[1, 0]}
               style={tw`bg-white border-0 py-5 mx-5 mt-2 rounded-lg w-60 ml-auto mr-auto bg-[#fff9bb] ${
-                active === "scooter" && "border-2"
+                active === "scooter" ? "border-2" : ""
               }`}
             >
               <Text style={tw`text-white text-center`}>Scooter</Text>
@@ -96,7 +119,7 @@ const ChooseThemeModal = ({
               start={[0, 1]}
               end={[1, 0]}
               style={tw`bg-white border-0 py-5 mx-5 mt-2 rounded-lg w-60 ml-auto mr-auto bg-[#fff9bb] ${
-                active === "sulphur" && "border-2"
+                active === "sulphur" ? "border-2" : ""
               }`}
             >
               <Text style={tw`text-white text-center`}>Sulphur</Text>
@@ -109,7 +132,7 @@ const ChooseThemeModal = ({
               start={[0, 1]}
               end={[1, 0]}
               style={tw`bg-white border-0 py-5 mx-5 mt-2 rounded-lg w-60 ml-auto mr-auto bg-[#fff9bb] ${
-                active === "atlas" && "border-2"
+                active === "atlas" ? "border-2" : ""
               }`}
             >
               <Text style={tw`text-white text-center`}>Atlas</Text>
@@ -119,7 +142,7 @@ const ChooseThemeModal = ({
 
         {/* Submit */}
         <TouchableOpacity
-          // onPress={creatChat}
+          onPress={handleThemeChange}
           style={tw`bg-[${theme?.primary[0]}] font-bold rounded-full px-15 py-2 mt-6 mb-8`}
         >
           <Text style={tw`text-black`}>Change</Text>
