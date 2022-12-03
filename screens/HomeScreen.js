@@ -4,7 +4,6 @@ import {
   TouchableOpacity,
   SafeAreaView,
   ScrollView,
-  TextInput,
 } from "react-native";
 import React, { useState } from "react";
 import tw from "twrnc";
@@ -12,7 +11,6 @@ import { auth, db } from "../firebase";
 import { useNavigation } from "@react-navigation/core";
 import { useCollection } from "react-firebase-hooks/firestore";
 import Modal from "react-native-modal";
-import * as EmailValidator from "email-validator";
 import {
   PlusIcon,
   ArrowTopRightOnSquareIcon,

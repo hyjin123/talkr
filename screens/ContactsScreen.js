@@ -45,7 +45,9 @@ const ContactsScreen = () => {
   return (
     <SafeAreaView style={tw`flex-1 items-center bg-white`}>
       {/* Heading */}
-      <View style={tw`my-6 items-center bg-white`}>
+      <View
+        style={tw`py-6 items-center w-full bg-white border-gray-100 rounded-br-3xl rounded-bl-3xl border-b-4 border-l-2 border-r-2 z-5`}
+      >
         <View style={tw`mb-4`}>
           <Text style={tw`font-semibold text-3xl`}>Contacts</Text>
         </View>
@@ -57,7 +59,7 @@ const ContactsScreen = () => {
       </View>
 
       {/* Body */}
-      <View style={tw`flex-1 bg-gray-100 w-full pl-10 pr-5 pt-5`}>
+      <View style={tw`flex-1 bg-gray-100 w-full pl-10 pr-5 pt-10 -mt-5`}>
         <AlphabetList
           // if user input is there, show filtered data, if not show all data (regular)
           data={input.length > 0 ? filteredData : data1}
@@ -90,7 +92,7 @@ const ContactsScreen = () => {
           renderCustomSectionHeader={(section) => (
             <View>
               <Text
-                style={{ color: "#a4b5fc", fontWeight: "bold", fontSize: "18" }}
+                style={{ color: "#a8b8ff", fontWeight: "bold", fontSize: "18" }}
               >
                 {section.title}
               </Text>

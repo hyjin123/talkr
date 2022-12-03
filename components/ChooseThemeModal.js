@@ -9,6 +9,11 @@ import { LinearGradient } from "expo-linear-gradient";
 
 const ChooseThemeModal = ({ themeModalVisible, setThemeModalVisible }) => {
   const [theme, setTheme] = useState([]);
+  const [active, setActive] = useState(null);
+
+  const handleThemeChange = () => {
+    // set theme property in users collection
+  };
 
   return (
     <Modal
@@ -29,57 +34,79 @@ const ChooseThemeModal = ({ themeModalVisible, setThemeModalVisible }) => {
 
         {/* Body */}
         <View style={tw`flex-1 mt-8`}>
-          <TouchableOpacity style={tw`mt-2`}>
+          <TouchableOpacity
+            onPress={() => setActive("piggyBank")}
+            style={tw`mt-2`}
+          >
             {/* #ee9ca7, #ffdde1*/}
             <LinearGradient
               colors={["#ee9ca7", "#ffdde1"]}
               start={[0, 1]}
               end={[1, 0]}
-              style={tw`bg-white border-0 py-5 mx-5 mt-2 rounded-lg w-60 ml-auto mr-auto bg-[#fff9bb]`}
+              style={tw`bg-white border-0 py-5 mx-5 mt-2 rounded-lg w-60 ml-auto mr-auto bg-[#fff9bb] ${
+                active === "piggyBank" && "border-2"
+              }`}
             >
               <Text style={tw`text-white text-center`}>Piggy Pink</Text>
             </LinearGradient>
           </TouchableOpacity>
-          <TouchableOpacity style={tw`mt-2`}>
+          <TouchableOpacity
+            onPress={() => setActive("citrusPeel")}
+            style={tw`mt-2`}
+          >
             {/* #3CA55C, #B5AC49*/}
             <LinearGradient
               colors={["#FDC830", "#F37335"]}
               start={[0, 1]}
               end={[1, 0]}
-              style={tw`bg-white border-0 py-5 mx-5 mt-2 rounded-lg w-60 ml-auto mr-auto bg-[#fff9bb]`}
+              style={tw`bg-white border-0 py-5 mx-5 mt-2 rounded-lg w-60 ml-auto mr-auto bg-[#fff9bb] ${
+                active === "citrusPeel" && "border-2"
+              }`}
             >
               <Text style={tw`text-white text-center`}>Citrus Peel</Text>
             </LinearGradient>
           </TouchableOpacity>
-          <TouchableOpacity style={tw`mt-2`}>
+          <TouchableOpacity
+            onPress={() => setActive("scooter")}
+            style={tw`mt-2`}
+          >
             {/* #F2994A, #F2C94C */}
             <LinearGradient
               colors={["#36D1DC", "#5B86E5"]}
               start={[0, 1]}
               end={[1, 0]}
-              style={tw`bg-white border-0 py-5 mx-5 mt-2 rounded-lg w-60 ml-auto mr-auto bg-[#fff9bb]`}
+              style={tw`bg-white border-0 py-5 mx-5 mt-2 rounded-lg w-60 ml-auto mr-auto bg-[#fff9bb] ${
+                active === "scooter" && "border-2"
+              }`}
             >
               <Text style={tw`text-white text-center`}>Scooter</Text>
             </LinearGradient>
           </TouchableOpacity>
-          <TouchableOpacity style={tw`mt-2`}>
+          <TouchableOpacity
+            onPress={() => setActive("sulphur")}
+            style={tw`mt-2`}
+          >
             {/* #F2994A, #F2C94C */}
             <LinearGradient
               colors={["#00b09b", "#96c93d"]}
               start={[0, 1]}
               end={[1, 0]}
-              style={tw`bg-white border-0 py-5 mx-5 mt-2 rounded-lg w-60 ml-auto mr-auto bg-[#fff9bb]`}
+              style={tw`bg-white border-0 py-5 mx-5 mt-2 rounded-lg w-60 ml-auto mr-auto bg-[#fff9bb] ${
+                active === "sulphur" && "border-2"
+              }`}
             >
               <Text style={tw`text-white text-center`}>Sulphur</Text>
             </LinearGradient>
           </TouchableOpacity>
-          <TouchableOpacity style={tw`mt-2`}>
+          <TouchableOpacity onPress={() => setActive("atlas")} style={tw`mt-2`}>
             {/* #F2994A, #F2C94C */}
             <LinearGradient
               colors={["#FEAC5E", "#C779D0", "#4BC0C8"]}
               start={[0, 1]}
               end={[1, 0]}
-              style={tw`bg-white border-0 py-5 mx-5 mt-2 rounded-lg w-60 ml-auto mr-auto bg-[#fff9bb]`}
+              style={tw`bg-white border-0 py-5 mx-5 mt-2 rounded-lg w-60 ml-auto mr-auto bg-[#fff9bb] ${
+                active === "atlas" && "border-2"
+              }`}
             >
               <Text style={tw`text-white text-center`}>Atlas</Text>
             </LinearGradient>

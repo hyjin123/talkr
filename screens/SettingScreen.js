@@ -150,7 +150,7 @@ const SettingScreen = () => {
 
       {/* Heading */}
       <View style={tw`my-6`}>
-        <Text style={tw`font-semibold text-3xl`}>Setting</Text>
+        <Text style={tw`font-semibold text-3xl`}>Settings</Text>
       </View>
 
       {/* Profile Information */}

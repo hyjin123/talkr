@@ -78,6 +78,7 @@ const RegisterTab = () => {
               email: email,
               lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
               photoURL: compressedImage.base64,
+              theme: ["#a8b8ff", "#bfbbf2", "#9ad8fc"],
             },
             { merge: true }
           );
