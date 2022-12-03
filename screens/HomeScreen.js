@@ -18,8 +18,9 @@ import {
 import ChatPreview from "../components/ChatPreview";
 import SearchBar from "../components/SearchBar";
 import AddFriendModal from "../components/AddFriendModal";
+import { useEffect } from "react";
 
-const HomeScreen = () => {
+const HomeScreen = ({ theme }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [signoutModalVisible, setSignoutModalVisible] = useState(false);
 
@@ -64,6 +65,7 @@ const HomeScreen = () => {
         <AddFriendModal
           modalVisible={modalVisible}
           setModalVisible={setModalVisible}
+          theme={theme}
         />
 
         {/* Modal - Signout */}
@@ -79,7 +81,7 @@ const HomeScreen = () => {
             </Text>
             <TouchableOpacity
               onPress={handleSignOut}
-              style={tw`bg-[#fff9bb] font-bold rounded-full px-15 py-2 mt-6`}
+              style={tw`bg-[${theme.primary[0]}] font-bold rounded-full px-15 py-2 mt-6`}
             >
               <Text style={tw`text-black`}>Confirm</Text>
             </TouchableOpacity>
@@ -114,6 +116,7 @@ const HomeScreen = () => {
         <SearchBar
           chatsSnapshot={chatsSnapshot}
           loggedInUserEmail={loggedInUserEmail}
+          theme={theme}
         />
 
         {/* Body - List of chat preview */}
@@ -128,6 +131,7 @@ const HomeScreen = () => {
               id={chat.id}
               users={chat.data().users}
               loggedInUserEmail={loggedInUserEmail}
+              theme={theme}
             />
           ))}
         </ScrollView>

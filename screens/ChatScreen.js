@@ -25,7 +25,7 @@ import Messages from "../components/Messages";
 import TimeAgo from "react-native-timeago";
 import { LinearGradient } from "expo-linear-gradient";
 
-const ChatScreen = ({ route, navigation }) => {
+const ChatScreen = ({ route, navigation, theme }) => {
   const [input, setInput] = useState("");
   const scrollViewRef = useRef();
 
@@ -70,6 +70,7 @@ const ChatScreen = ({ route, navigation }) => {
             timestamp: message.data().timestamp?.toDate().getTime(),
           }}
           loggedInUserEmail={loggedInUserEmail}
+          theme={theme}
         />
       ));
     }
@@ -129,7 +130,7 @@ const ChatScreen = ({ route, navigation }) => {
                   source={{ uri: "data:image/jpeg;base64," + friendAvatar }}
                   style={[
                     tw`w-15 h-15 rounded-full border-2`,
-                    { borderColor: "#a8b8ff" },
+                    { borderColor: `${theme.primary[0]}` },
                   ]}
                 />
               </View>

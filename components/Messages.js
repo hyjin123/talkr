@@ -1,10 +1,11 @@
 import { View, Text } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import tw from "twrnc";
 import moment from "moment";
 import { LinearGradient } from "expo-linear-gradient";
+import { db } from "../firebase";
 
-const Messages = ({ user, message, loggedInUserEmail }) => {
+const Messages = ({ user, message, loggedInUserEmail, theme }) => {
   // determine whether the message is from YOU or YOUR FRIEND
   const messageType = user === loggedInUserEmail ? "sender" : "friend";
 
@@ -12,7 +13,7 @@ const Messages = ({ user, message, loggedInUserEmail }) => {
     <View>
       {messageType === "sender" ? (
         <LinearGradient
-          colors={["#a8b8ff", "#bfbbf2", "#9ad8fc"]}
+          colors={theme.message}
           start={[0, 1]}
           end={[1, 0]}
           style={tw`bg-white border-0 px-3 py-2 mx-5 mt-2 rounded-xl rounded-br-none w-50 ml-auto bg-[#fff9bb]`}

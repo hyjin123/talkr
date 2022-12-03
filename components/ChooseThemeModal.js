@@ -7,8 +7,12 @@ import Modal from "react-native-modal";
 import { XMarkIcon } from "react-native-heroicons/solid";
 import { LinearGradient } from "expo-linear-gradient";
 
-const ChooseThemeModal = ({ themeModalVisible, setThemeModalVisible }) => {
-  const [theme, setTheme] = useState([]);
+const ChooseThemeModal = ({
+  themeModalVisible,
+  setThemeModalVisible,
+  theme,
+}) => {
+  const [theme1, setTheme1] = useState([]);
   const [active, setActive] = useState(null);
 
   const handleThemeChange = () => {
@@ -116,7 +120,7 @@ const ChooseThemeModal = ({ themeModalVisible, setThemeModalVisible }) => {
         {/* Submit */}
         <TouchableOpacity
           // onPress={creatChat}
-          style={tw`bg-[#fff9bb] font-bold rounded-full px-15 py-2 mt-6 mb-8`}
+          style={tw`bg-[${theme?.primary[0]}] font-bold rounded-full px-15 py-2 mt-6 mb-8`}
         >
           <Text style={tw`text-black`}>Change</Text>
         </TouchableOpacity>

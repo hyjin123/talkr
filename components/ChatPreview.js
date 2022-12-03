@@ -12,7 +12,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Modal from "react-native-modal";
 import { LinearGradient } from "expo-linear-gradient";
 
-const ChatPreview = ({ id, users, loggedInUserEmail }) => {
+const ChatPreview = ({ id, users, loggedInUserEmail, theme }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const swipeClose = useRef(null);
 
@@ -168,7 +168,7 @@ const ChatPreview = ({ id, users, loggedInUserEmail }) => {
                       source={{ uri: "data:image/jpeg;base64," + friendAvatar }}
                       style={[
                         tw`w-15 h-15 rounded-full border-2`,
-                        { borderColor: "#cad4fc" },
+                        { borderColor: `${theme.primary[0]}` },
                       ]}
                     />
                   ) : (
@@ -203,7 +203,7 @@ const ChatPreview = ({ id, users, loggedInUserEmail }) => {
                   </View>
                   {unreadMessagesCount > 0 ? (
                     <LinearGradient
-                      colors={["#a8b8ff", "#bfbbf2", "#9ad8fc"]}
+                      colors={theme.message}
                       style={tw`p-2 px-4 mt-2 rounded-full bg-[#fff9bb]`}
                     >
                       <Text style={tw`text-center font-bold text-white`}>

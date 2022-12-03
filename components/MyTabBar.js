@@ -12,12 +12,12 @@ import {
 } from "react-native-heroicons/solid";
 import tw from "twrnc";
 
-const MyTabBar = ({ state, descriptors, navigation }) => {
+const MyTabBar = ({ state, descriptors, navigation, theme }) => {
   return (
     <SafeAreaView
       style={{
         flexDirection: "row",
-        backgroundColor: "#cad4fc",
+        backgroundColor: `${theme.primary[0]}`,
         height: 60,
         borderRadius: 50,
         justifyContent: "center",

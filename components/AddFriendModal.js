@@ -6,7 +6,7 @@ import { useCollection } from "react-firebase-hooks/firestore";
 import Modal from "react-native-modal";
 import * as EmailValidator from "email-validator";
 
-const AddFriendModal = ({ modalVisible, setModalVisible }) => {
+const AddFriendModal = ({ modalVisible, setModalVisible, theme }) => {
   const [addedEmail, setAddedEmail] = useState("");
 
   // get the logged in user id through auth
@@ -79,7 +79,7 @@ const AddFriendModal = ({ modalVisible, setModalVisible }) => {
         />
         <TouchableOpacity
           onPress={creatChat}
-          style={tw`bg-[#fff9bb] font-bold rounded-full px-15 py-2 mt-6`}
+          style={tw`bg-[${theme?.primary[0]}] font-bold rounded-full px-15 py-2 mt-6`}
         >
           <Text style={tw`text-black`}>ADD</Text>
         </TouchableOpacity>

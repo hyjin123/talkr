@@ -7,7 +7,7 @@ import { auth, db } from "../firebase";
 import { getFriendsEmails, getFriendsData } from "../utils/getFriendData";
 import TimeAgo from "react-native-timeago";
 
-const ContactsScreen = () => {
+const ContactsScreen = ({ theme }) => {
   const [data1, setData1] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [input, setInput] = useState("");
@@ -75,7 +75,7 @@ const ContactsScreen = () => {
                   source={{ uri: "data:image/jpeg;base64," + item.photoURL }}
                   style={[
                     tw`w-12 h-12 rounded-full border-2`,
-                    { borderColor: "#cad4fc" },
+                    { borderColor: `${theme.primary[0]}` },
                   ]}
                 />
               </View>
@@ -92,7 +92,11 @@ const ContactsScreen = () => {
           renderCustomSectionHeader={(section) => (
             <View>
               <Text
-                style={{ color: "#a8b8ff", fontWeight: "bold", fontSize: "18" }}
+                style={{
+                  color: `${theme.message[0]}`,
+                  fontWeight: "bold",
+                  fontSize: "18",
+                }}
               >
                 {section.title}
               </Text>

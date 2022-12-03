@@ -10,7 +10,7 @@ import tw from "twrnc";
 import FriendAvatar from "./FriendAvatar";
 import { MagnifyingGlassIcon, XMarkIcon } from "react-native-heroicons/solid";
 
-const SearchBar = ({ chatsSnapshot, loggedInUserEmail }) => {
+const SearchBar = ({ chatsSnapshot, loggedInUserEmail, theme }) => {
   const [search, setSearch] = useState(false);
   const [input, setInput] = useState("");
 
@@ -77,6 +77,7 @@ const SearchBar = ({ chatsSnapshot, loggedInUserEmail }) => {
             users={chat.data().users}
             loggedInUserEmail={loggedInUserEmail}
             input={input}
+            theme={theme}
           />
         ))}
       </ScrollView>

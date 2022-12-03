@@ -29,7 +29,7 @@ import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
 import Modal from "react-native-modal";
 import ChooseThemeModal from "../components/ChooseThemeModal";
 
-const SettingScreen = () => {
+const SettingScreen = ({ theme }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [themeModalVisible, setThemeModalVisible] = useState(false);
 
@@ -106,12 +106,14 @@ const SettingScreen = () => {
       <AddFriendModal
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
+        theme={theme}
       />
 
       {/* Modal - Choose Theme */}
       <ChooseThemeModal
         themeModalVisible={themeModalVisible}
         setThemeModalVisible={setThemeModalVisible}
+        theme={theme}
       />
 
       {/* Modal - Signout */}
@@ -127,7 +129,7 @@ const SettingScreen = () => {
           </Text>
           <TouchableOpacity
             onPress={handleSignOut}
-            style={tw`bg-[#fff9bb] font-bold rounded-full px-15 py-2 mt-6`}
+            style={tw`bg-[${theme?.primary[0]}] font-bold rounded-full px-15 py-2 mt-6`}
           >
             <Text style={tw`text-black`}>Confirm</Text>
           </TouchableOpacity>
@@ -160,7 +162,7 @@ const SettingScreen = () => {
         <View
           style={[
             tw`absolute -top-14 w-25 h-25 justify-center items-center bg-gray-200 p-2 m-1 rounded-full border-2`,
-            { borderColor: "#cad4fc" },
+            { borderColor: `${theme.primary[0]}` },
           ]}
         >
           {user?.photoURL ? (
@@ -168,7 +170,7 @@ const SettingScreen = () => {
               source={{ uri: "data:image/jpeg;base64," + user?.photoURL }}
               style={[
                 tw`w-25 h-25 rounded-full border-2`,
-                { borderColor: "#a8b8ff" },
+                { borderColor: `${theme.primary[0]}` },
               ]}
             />
           ) : (

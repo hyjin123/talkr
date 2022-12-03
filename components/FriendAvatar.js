@@ -7,7 +7,7 @@ import getFriendEmail from "../utils/getFriendEmail";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { useNavigation } from "@react-navigation/core";
 
-const FriendAvatar = ({ id, users, loggedInUserEmail, input }) => {
+const FriendAvatar = ({ id, users, loggedInUserEmail, input, theme }) => {
   const navigation = useNavigation();
 
   // use the function that filters out your email and leaves only your friend's email
@@ -64,7 +64,7 @@ const FriendAvatar = ({ id, users, loggedInUserEmail, input }) => {
                 source={{ uri: "data:image/jpeg;base64," + friendAvatar }}
                 style={[
                   tw`w-15 h-15 rounded-full border-2`,
-                  { borderColor: "#cad4fc" },
+                  { borderColor: `${theme?.primary[0]}` },
                 ]}
               />
             ) : (

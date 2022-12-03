@@ -7,14 +7,14 @@ import ContactsScreen from "../screens/ContactsScreen";
 import MyTabBar from "../components/MyTabBar";
 import tw from "twrnc";
 
-const TabNavigator = () => {
+const TabNavigator = ({ theme }) => {
   const Tab = createBottomTabNavigator();
 
   return (
     // wrapped it in a view to change the background color of the tab navigator
     <View style={[tw`flex-1`, { backgroundColor: "#f3f4f6" }]}>
       <Tab.Navigator
-        tabBar={(props) => <MyTabBar {...props} />}
+        tabBar={(props) => <MyTabBar {...props} theme={theme} />}
         labeled="false"
       >
         <Tab.Screen
@@ -22,22 +22,27 @@ const TabNavigator = () => {
           options={{
             headerShown: false,
           }}
-          component={HomeScreen}
-        />
+        >
+          {(props) => <HomeScreen {...props} theme={theme} />}
+        </Tab.Screen>
+
         <Tab.Screen
           name="Contacts"
           options={{
             headerShown: false,
           }}
-          component={ContactsScreen}
-        />
+        >
+          {(props) => <ContactsScreen {...props} theme={theme} />}
+        </Tab.Screen>
+
         <Tab.Screen
           name="Settings"
           options={{
             headerShown: false,
           }}
-          component={SettingScreen}
-        />
+        >
+          {(props) => <SettingScreen {...props} theme={theme} />}
+        </Tab.Screen>
       </Tab.Navigator>
     </View>
   );
