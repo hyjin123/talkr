@@ -12,6 +12,8 @@ const StackNavigator = () => {
     primary: ["#cad4fc"],
     message: ["#a8b8ff", "#bfbbf2", "#9ad8fc"],
   });
+
+  // this state is used to trigger the useeffect again when a user changes the theme
   const [themeChange, setThemeChange] = useState([]);
 
   const Stack = createNativeStackNavigator();

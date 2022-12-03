@@ -19,11 +19,15 @@ const ChooseThemeModal = ({
   const [user] = useAuthState(auth);
 
   const themeColors = {
+    default: {
+      primary: ["#cad4fc"],
+      message: ["#a8b8ff", "#bfbbf2", "#9ad8fc"],
+    },
     piggyBank: { primary: ["#e8cfd2"], message: ["#ee9ca7", "#ffdde1"] },
-    citrusPeel: { primary: ["#f0dca5"], message: ["#FDC830", "#F37335"] },
-    scooter: { primary: ["#aee7eb"], message: ["#36D1DC", "#5B86E5"] },
-    sulphur: { primary: ["#8ce6db"], message: ["#00b09b", "#96c93d"] },
-    atlas: { primary: ["#fad2ac"], message: ["#FEAC5E", "#C779D0", "#4BC0C8"] },
+    citrusPeel: { primary: ["#fcd974"], message: ["#FDC830", "#F37335"] },
+    scooter: { primary: ["#9becf2"], message: ["#36D1DC", "#5B86E5"] },
+    sulphur: { primary: ["#c4eb81"], message: ["#00b09b", "#96c93d"] },
+    atlas: { primary: ["#fcdbbb"], message: ["#FEAC5E", "#C779D0", "#4BC0C8"] },
   };
 
   const handleThemeChange = () => {
@@ -47,7 +51,7 @@ const ChooseThemeModal = ({
       isVisible={themeModalVisible}
       onBackdropPress={() => setThemeModalVisible(false)}
     >
-      <View style={tw`flex-1 items-center bg-white my-30 mx-3 rounded-xl`}>
+      <View style={tw`flex-1 items-center bg-white my-22 mx-3 rounded-xl`}>
         <TouchableOpacity
           onPress={() => setThemeModalVisible(false)}
           style={tw`absolute top-4 right-4`}
@@ -62,10 +66,24 @@ const ChooseThemeModal = ({
         {/* Body */}
         <View style={tw`flex-1 mt-8`}>
           <TouchableOpacity
+            onPress={() => setActive("default")}
+            style={tw`mt-2`}
+          >
+            <LinearGradient
+              colors={["#a8b8ff", "#bfbbf2", "#9ad8fc"]}
+              start={[0, 1]}
+              end={[1, 0]}
+              style={tw`bg-white border-0 py-5 mx-5 mt-2 rounded-lg w-60 ml-auto mr-auto bg-[#fff9bb] ${
+                active === "default" ? "border-2" : ""
+              }`}
+            >
+              <Text style={tw`text-white text-center`}>Default</Text>
+            </LinearGradient>
+          </TouchableOpacity>
+          <TouchableOpacity
             onPress={() => setActive("piggyBank")}
             style={tw`mt-2`}
           >
-            {/* #ee9ca7, #ffdde1*/}
             <LinearGradient
               colors={["#ee9ca7", "#ffdde1"]}
               start={[0, 1]}
@@ -81,7 +99,6 @@ const ChooseThemeModal = ({
             onPress={() => setActive("citrusPeel")}
             style={tw`mt-2`}
           >
-            {/* #3CA55C, #B5AC49*/}
             <LinearGradient
               colors={["#FDC830", "#F37335"]}
               start={[0, 1]}
@@ -97,7 +114,6 @@ const ChooseThemeModal = ({
             onPress={() => setActive("scooter")}
             style={tw`mt-2`}
           >
-            {/* #F2994A, #F2C94C */}
             <LinearGradient
               colors={["#36D1DC", "#5B86E5"]}
               start={[0, 1]}
@@ -113,7 +129,6 @@ const ChooseThemeModal = ({
             onPress={() => setActive("sulphur")}
             style={tw`mt-2`}
           >
-            {/* #F2994A, #F2C94C */}
             <LinearGradient
               colors={["#00b09b", "#96c93d"]}
               start={[0, 1]}
@@ -126,7 +141,6 @@ const ChooseThemeModal = ({
             </LinearGradient>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => setActive("atlas")} style={tw`mt-2`}>
-            {/* #F2994A, #F2C94C */}
             <LinearGradient
               colors={["#FEAC5E", "#C779D0", "#4BC0C8"]}
               start={[0, 1]}
