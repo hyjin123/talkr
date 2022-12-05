@@ -28,10 +28,12 @@ import * as ImagePicker from "expo-image-picker";
 import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
 import Modal from "react-native-modal";
 import ChooseThemeModal from "../components/ChooseThemeModal";
+import SetStatusModal from "../components/SetStatusModal";
 
 const SettingScreen = ({ theme, setThemeChange }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [themeModalVisible, setThemeModalVisible] = useState(false);
+  const [statusModalVisible, setStatusModalVisible] = useState(false);
 
   const [signoutModalVisible, setSignoutModalVisible] = useState(false);
   const [helpModalVisible, setHelpModalVisible] = useState(false);
@@ -106,6 +108,13 @@ const SettingScreen = ({ theme, setThemeChange }) => {
       <AddFriendModal
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
+        theme={theme}
+      />
+
+      {/* Modal - Set Status*/}
+      <SetStatusModal
+        statusModalVisible={statusModalVisible}
+        setStatusModalVisible={setStatusModalVisible}
         theme={theme}
       />
 
@@ -212,6 +221,7 @@ const SettingScreen = ({ theme, setThemeChange }) => {
       {/* Edit Profile */}
       <ScrollView style={tw`mt-5`}>
         <TouchableOpacity
+          onPress={() => setStatusModalVisible(true)}
           style={tw`flex-row items-center justify-between w-80 border-2 mb-3 px-3 py-4 rounded-xl border-gray-200`}
         >
           <View style={tw`rounded-full p-2 bg-[#d4c2ed]`}>
