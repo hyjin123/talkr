@@ -43,6 +43,7 @@ const SettingScreen = ({ theme, setThemeChange }) => {
 
   // get the logged in user email through auth
   const loggedInUserEmail = auth.currentUser.email;
+  const userId = auth.currentUser.uid;
 
   // get the logged in user info
   const [userSnapshot] = useCollection(
@@ -50,7 +51,6 @@ const SettingScreen = ({ theme, setThemeChange }) => {
   );
 
   const user = userSnapshot?.docs?.[0]?.data();
-  const userId = userSnapshot?.docs?.[0].id;
 
   // user picking an image for their avatar
   const pickImage = async () => {

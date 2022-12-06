@@ -14,7 +14,7 @@ import firebase from "firebase";
 import * as ImagePicker from "expo-image-picker";
 import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
 
-const RegisterTab = () => {
+const RegisterTab = ({ setLoggedInUserEmail }) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -85,6 +85,8 @@ const RegisterTab = () => {
             },
             { merge: true }
           );
+
+        setLoggedInUserEmail(user.email);
       })
       .catch((error) => alert(error.message));
   };

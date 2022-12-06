@@ -26,6 +26,7 @@ const ContactsScreen = ({ theme }) => {
             email: item.email,
             lastSeen: item.lastSeen,
             photoURL: item.photoURL,
+            status: item.status,
           };
         });
         setData1(tempArray);
@@ -81,7 +82,12 @@ const ContactsScreen = ({ theme }) => {
               </View>
               <View style={tw`justify-center`}>
                 <Text style={tw`font-semibold text-base`}>{item.value}</Text>
-                <Text style={tw`text-gray-800 text-xs`}>{item.email}</Text>
+                {/* <Text style={tw`text-gray-800 text-xs`}>{item.email}</Text> */}
+                {item.status ? (
+                  <Text style={tw`pb-0.8 pt-0.2`}>"{item.status}"</Text>
+                ) : (
+                  <></>
+                )}
                 <Text style={tw`text-gray-500 text-xs`}>
                   Last Active: {""}
                   <TimeAgo time={item.lastSeen.toDate()} />

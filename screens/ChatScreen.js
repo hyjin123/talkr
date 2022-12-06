@@ -14,7 +14,6 @@ import {
   PaperAirplaneIcon,
   VideoCameraIcon,
   PhoneIcon,
-  FaceSmileIcon,
   MicrophoneIcon,
 } from "react-native-heroicons/outline";
 import { auth, db } from "../firebase";
@@ -23,7 +22,6 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import firebase from "firebase";
 import Messages from "../components/Messages";
 import TimeAgo from "react-native-timeago";
-import { LinearGradient } from "expo-linear-gradient";
 
 const ChatScreen = ({ route, navigation, theme }) => {
   const [input, setInput] = useState("");
@@ -149,8 +147,8 @@ const ChatScreen = ({ route, navigation, theme }) => {
                 <Text style={tw`text-sm font-bold`}>{friendEmail}</Text>
               )}
               {friendSnapshot ? (
-                <Text style={tw`text-xs`}>
-                  Last Active: {"\n"}
+                <Text style={tw`text-xs text-gray-500`}>
+                  Last Active:{" "}
                   {friend?.lastSeen?.toDate() ? (
                     <TimeAgo time={friend?.lastSeen?.toDate()} />
                   ) : (
