@@ -7,7 +7,7 @@ import {
   Alert,
   ScrollView,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import tw from "twrnc";
 import { auth, db } from "../firebase";
 import { useCollection } from "react-firebase-hooks/firestore";
@@ -37,6 +37,7 @@ const SettingScreen = ({ theme, setThemeChange }) => {
 
   const [signoutModalVisible, setSignoutModalVisible] = useState(false);
   const [helpModalVisible, setHelpModalVisible] = useState(false);
+  const [status, setStatus] = useState("");
 
   const navigation = useNavigation();
 
@@ -100,7 +101,16 @@ const SettingScreen = ({ theme, setThemeChange }) => {
       .catch((error) => alert(error.message));
   };
 
-  // help modal
+  // retrieving status for the user
+  useEffect(() => {
+    db.collection("users")
+      .doc(userId)
+      .get()
+      .then((data) => {
+        const status = data.data().status;
+        setStatus(status);
+      });
+  }, []);
 
   return (
     <SafeAreaView style={tw`flex-1 items-center bg-gray-100`}>
@@ -116,6 +126,7 @@ const SettingScreen = ({ theme, setThemeChange }) => {
         statusModalVisible={statusModalVisible}
         setStatusModalVisible={setStatusModalVisible}
         theme={theme}
+        setStatus={setStatus}
       />
 
       {/* Modal - Choose Theme */}
@@ -167,7 +178,7 @@ const SettingScreen = ({ theme, setThemeChange }) => {
 
       {/* Profile Information */}
       <View
-        style={tw`border-2 w-80 h-70 items-center mt-12 bg-white border-gray-200 rounded-2xl`}
+        style={tw`border-2 w-80 h-75 items-center mt-12 bg-white border-gray-200 rounded-2xl`}
       >
         <View
           style={[
@@ -190,10 +201,18 @@ const SettingScreen = ({ theme, setThemeChange }) => {
         <TouchableOpacity onPress={pickImage} style={tw`mt-14`}>
           <CameraIcon size={30} color="#c4c4c4" />
         </TouchableOpacity>
-        <View style={tw`mt-2 mb-8 items-center`}>
+        <View style={tw`mt-2 mb-6 items-center`}>
           <Text style={tw`text-2xl font-bold`}>{user?.displayName}</Text>
           <Text>{user?.email}</Text>
         </View>
+
+        {status ? (
+          <View style={tw`mb-6`}>
+            <Text>"{status}"</Text>
+          </View>
+        ) : (
+          <View style={tw`mb-6`}></View>
+        )}
 
         <View style={tw`flex-row w-50 justify-between`}>
           <View style={tw`items-center`}>
@@ -222,7 +241,7 @@ const SettingScreen = ({ theme, setThemeChange }) => {
       <ScrollView style={tw`mt-5`}>
         <TouchableOpacity
           onPress={() => setStatusModalVisible(true)}
-          style={tw`flex-row items-center justify-between w-80 border-2 mb-3 px-3 py-4 rounded-xl border-gray-200`}
+          style={tw`flex-row items-center justify-between w-80 border-2 mb-3 px-3 py-3 rounded-xl border-gray-200`}
         >
           <View style={tw`rounded-full p-2 bg-[#d4c2ed]`}>
             <PencilSquareIcon size={24} color="white" />
@@ -237,7 +256,7 @@ const SettingScreen = ({ theme, setThemeChange }) => {
 
         <TouchableOpacity
           onPress={() => setThemeModalVisible(true)}
-          style={tw`flex-row items-center justify-between w-80 border-2 mb-3 px-3 py-4 rounded-xl border-gray-200`}
+          style={tw`flex-row items-center justify-between w-80 border-2 mb-3 px-3 py-3 rounded-xl border-gray-200`}
         >
           <View style={tw`rounded-full p-2 bg-[#f2ca8d]`}>
             <WrenchScrewdriverIcon size={24} color="white" />
@@ -251,7 +270,7 @@ const SettingScreen = ({ theme, setThemeChange }) => {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => setHelpModalVisible(true)}
-          style={tw`flex-row items-center justify-between w-80 border-2 mb-3 px-3 py-4 rounded-xl border-gray-200`}
+          style={tw`flex-row items-center justify-between w-80 border-2 mb-3 px-3 py-3 rounded-xl border-gray-200`}
         >
           <View style={tw`rounded-full p-2 bg-[#abdfed]`}>
             <QuestionMarkCircleIcon size={24} color="white" />
@@ -265,7 +284,7 @@ const SettingScreen = ({ theme, setThemeChange }) => {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => setSignoutModalVisible(true)}
-          style={tw`flex-row items-center justify-between w-80 border-2 mb-3 px-3 py-4 rounded-xl border-gray-200`}
+          style={tw`flex-row items-center justify-between w-80 border-2 mb-3 px-3 py-3 rounded-xl border-gray-200`}
         >
           <View style={tw`rounded-full p-2 bg-[#f27480]`}>
             <ArrowTopRightOnSquareIcon size={24} color="white" />

@@ -8,8 +8,9 @@ const SetStatusModal = ({
   statusModalVisible,
   setStatusModalVisible,
   theme,
+  setStatus,
 }) => {
-  const [status, setStatus] = useState("");
+  const [statusInput, setStatusInput] = useState("");
   // status has a character limit of 40
   const [count, setCount] = useState(40);
 
@@ -20,14 +21,17 @@ const SetStatusModal = ({
   const handleStatusChange = () => {
     db.collection("users").doc(userid).set(
       {
-        status,
+        status: statusInput,
       },
       { merge: true }
     );
 
     setStatusModalVisible(false);
-    setStatus("");
+    setStatusInput("");
     setCount(40);
+
+    // set the status so the settings page re-renders with the new status
+    setStatus(statusInput);
   };
 
   return (
@@ -35,7 +39,7 @@ const SetStatusModal = ({
       isVisible={statusModalVisible}
       onBackdropPress={() => {
         setStatusModalVisible(false);
-        setStatus("");
+        setStatusInput("");
         setCount(40);
       }}
     >
@@ -47,9 +51,9 @@ const SetStatusModal = ({
           <TextInput
             placeholder="What are you up to?"
             placeholderTextColor="gray"
-            value={status}
+            value={statusInput}
             onChangeText={(text) => {
-              setStatus(text);
+              setStatusInput(text);
               setCount(40 - text.length);
             }}
             style={tw`border-2 border-gray-300 rounded-lg py-1 w-65 p-2 mt-3`}

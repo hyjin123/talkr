@@ -41,7 +41,7 @@ const ChatPreview = ({ id, users, loggedInUserEmail, theme }) => {
   // getting chat snapshot from the database so we can see if the chat has been deleted or not
   const [chatSnapshot] = useCollection(db.collection("chats").doc(id));
   const chatDeletedStatus =
-    chatSnapshot?.data().status[loggedInUserEmail].delete;
+    chatSnapshot?.data()?.status[loggedInUserEmail]?.delete;
 
   // when a user clicks on their friend, navigate to chat screen
   const handleOpenChat = () => {

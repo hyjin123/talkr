@@ -10,7 +10,7 @@ import tw from "twrnc";
 import LoginTab from "../components/LoginTab";
 import RegisterTab from "../components/RegisterTab";
 
-const LoginScreen = () => {
+const LoginScreen = ({ setLoggedInUserEmail }) => {
   const [selectedTab, setSelectedTab] = useState("register");
 
   return (
@@ -37,7 +37,11 @@ const LoginScreen = () => {
             <Text>REGISTER</Text>
           </TouchableOpacity>
         </View>
-        {selectedTab === "register" ? <RegisterTab /> : <LoginTab />}
+        {selectedTab === "register" ? (
+          <RegisterTab setLoggedInUserEmail={setLoggedInUserEmail} />
+        ) : (
+          <LoginTab setLoggedInUserEmail={setLoggedInUserEmail} />
+        )}
       </View>
     </SafeAreaView>
   );

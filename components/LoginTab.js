@@ -10,7 +10,7 @@ import tw from "twrnc";
 import { auth } from "../firebase";
 import { useNavigation } from "@react-navigation/core";
 
-const LoginTab = () => {
+const LoginTab = ({ setLoggedInUserEmail }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -31,6 +31,7 @@ const LoginTab = () => {
       .signInWithEmailAndPassword(email, password)
       .then((userCredential) => {
         const user = userCredential.user;
+        setLoggedInUserEmail(user.email);
       })
       .catch((error) => alert(error.message));
   };

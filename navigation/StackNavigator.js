@@ -12,14 +12,12 @@ const StackNavigator = () => {
     primary: ["#cad4fc"],
     message: ["#a8b8ff", "#bfbbf2", "#9ad8fc"],
   });
+  const [loggedInUserEmail, setLoggedInUserEmail] = useState("");
 
   // this state is used to trigger the useeffect again when a user changes the theme
   const [themeChange, setThemeChange] = useState([]);
 
   const Stack = createNativeStackNavigator();
-
-  // get the logged in user id through auth
-  const loggedInUserEmail = auth?.currentUser?.email;
 
   // set a theme
   // extract the message color theme from firebase database
@@ -43,11 +41,11 @@ const StackNavigator = () => {
         options={{ headerShown: false }}
       />
 
-      <Stack.Screen
-        name="Login"
-        component={LoginScreen}
-        options={{ headerShown: false }}
-      />
+      <Stack.Screen name="Login" options={{ headerShown: false }}>
+        {(props) => (
+          <LoginScreen {...props} setLoggedInUserEmail={setLoggedInUserEmail} />
+        )}
+      </Stack.Screen>
 
       <Stack.Screen name="TabNavigator" options={{ headerShown: false }}>
         {(props) => (
