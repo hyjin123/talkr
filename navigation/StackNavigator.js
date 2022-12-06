@@ -12,7 +12,13 @@ const StackNavigator = () => {
     primary: ["#cad4fc"],
     message: ["#a8b8ff", "#bfbbf2", "#9ad8fc"],
   });
-  const [loggedInUserEmail, setLoggedInUserEmail] = useState("");
+  const [loggedInUserEmail, setLoggedInUserEmail] = useState();
+
+  auth.onAuthStateChanged((user) => {
+    if (user) {
+      setLoggedInUserEmail(user.email);
+    }
+  });
 
   // this state is used to trigger the useeffect again when a user changes the theme
   const [themeChange, setThemeChange] = useState([]);
