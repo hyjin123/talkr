@@ -28,6 +28,7 @@ const ChatPreview = ({ id, users, loggedInUserEmail, theme }) => {
 
   const friendAvatar = friendSnapshot?.docs?.[0]?.data().photoURL;
   const friendName = friendSnapshot?.docs?.[0]?.data().displayName;
+  const friendStatus = friendSnapshot?.docs?.[0]?.data().status;
 
   // getting messages snapshot from the database
   const [messagesSnapshot] = useCollection(
@@ -62,6 +63,7 @@ const ChatPreview = ({ id, users, loggedInUserEmail, theme }) => {
       friendAvatar,
       friendName,
       friendEmail,
+      friendStatus,
     });
   };
 

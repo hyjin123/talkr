@@ -27,7 +27,8 @@ const ChatScreen = ({ route, navigation, theme }) => {
   const [input, setInput] = useState("");
   const scrollViewRef = useRef();
 
-  const { id, friendAvatar, friendName, friendEmail } = route.params;
+  const { id, friendAvatar, friendName, friendEmail, friendStatus } =
+    route.params;
 
   // get user information in order to get user.iud (this will help set the last active status)
   const [user] = useAuthState(auth);
@@ -111,6 +112,18 @@ const ChatScreen = ({ route, navigation, theme }) => {
     setInput("");
   };
 
+  // when a user clicks on their friend's avatar
+  const handleFriendClick = () => {
+    // navigate to the chat screen
+    navigation.navigate("Friend", {
+      id,
+      friendAvatar,
+      friendName,
+      friendEmail,
+      friendStatus,
+    });
+  };
+
   return (
     <>
       {/* this SafeAreaView is set so that the top of the screen's background remains white */}
@@ -121,7 +134,10 @@ const ChatScreen = ({ route, navigation, theme }) => {
           <TouchableOpacity onPress={() => navigation.navigate("Home")}>
             <ArrowLeftIcon size={24} color="black" />
           </TouchableOpacity>
-          <View style={tw`flex-row flex-1 items-center ml-2`}>
+          <TouchableOpacity
+            onPress={handleFriendClick}
+            style={tw`flex-row flex-1 items-center ml-2`}
+          >
             {friendAvatar ? (
               <View>
                 <Image
@@ -159,7 +175,7 @@ const ChatScreen = ({ route, navigation, theme }) => {
                 <Text>Unavailable</Text>
               )}
             </View>
-          </View>
+          </TouchableOpacity>
 
           <View style={tw`flex-row w-30`}>
             <TouchableOpacity

@@ -3,6 +3,7 @@ import HomeScreen from "../screens/HomeScreen";
 import LoginScreen from "../screens/LoginScreen";
 import GetStarted from "../screens/GetStarted";
 import ChatScreen from "../screens/ChatScreen";
+import FriendScreen from "../screens/FriendScreen";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import TabNavigator from "./TabNavigator";
 import { db, auth } from "../firebase";
@@ -65,6 +66,10 @@ const StackNavigator = () => {
 
       <Stack.Screen name="Chat" options={{ headerShown: false }}>
         {(props) => <ChatScreen {...props} theme={theme} />}
+      </Stack.Screen>
+
+      <Stack.Screen name="Friend" options={{ headerShown: false }}>
+        {(props) => <FriendScreen {...props} theme={theme} />}
       </Stack.Screen>
     </Stack.Navigator>
   );
