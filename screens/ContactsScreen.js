@@ -1,4 +1,10 @@
-import { View, Text, SafeAreaView, Image } from "react-native";
+import {
+  View,
+  Text,
+  SafeAreaView,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 import React, { useEffect, useMemo, useState } from "react";
 import tw from "twrnc";
 import ContactsSearchBar from "../components/ContactsSearchBar";
@@ -6,11 +12,14 @@ import { AlphabetList } from "react-native-section-alphabet-list";
 import { auth, db } from "../firebase";
 import { getFriendsEmails, getFriendsData } from "../utils/getFriendData";
 import TimeAgo from "react-native-timeago";
+import { useNavigation } from "@react-navigation/core";
 
 const ContactsScreen = ({ theme }) => {
   const [data1, setData1] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [input, setInput] = useState("");
+
+  const navigation = useNavigation();
 
   // get the logged in user email through auth
   const loggedInUserEmail = auth.currentUser.email;
@@ -43,6 +52,22 @@ const ContactsScreen = ({ theme }) => {
     }
   }, [input]);
 
+  // when a user clicks on the friend's contact, it will take them to their profile.
+  const handleClickContact = (
+    friendName,
+    friendEmail,
+    friendAvatar,
+    friendStatus
+  ) => {
+    navigation.navigate("Friend", {
+      friendAvatar,
+      friendName,
+      friendEmail,
+      friendStatus,
+      theme,
+    });
+  };
+
   return (
     <SafeAreaView style={tw`flex-1 items-center bg-white`}>
       {/* Heading */}
@@ -70,7 +95,17 @@ const ContactsScreen = ({ theme }) => {
           }}
           style={tw`flex-1`}
           renderCustomItem={(item) => (
-            <View style={tw`flex-row my-3`}>
+            <TouchableOpacity
+              onPress={() =>
+                handleClickContact(
+                  item.value,
+                  item.email,
+                  item.photoURL,
+                  item.status
+                )
+              }
+              style={tw`flex-row my-3`}
+            >
               <View style={tw`mr-3`}>
                 <Image
                   source={{ uri: "data:image/jpeg;base64," + item.photoURL }}
@@ -93,7 +128,7 @@ const ContactsScreen = ({ theme }) => {
                   <TimeAgo time={item.lastSeen.toDate()} />
                 </Text>
               </View>
-            </View>
+            </TouchableOpacity>
           )}
           renderCustomSectionHeader={(section) => (
             <View>

@@ -9,8 +9,10 @@ import React from "react";
 import tw from "twrnc";
 import {
   ChatBubbleLeftRightIcon,
-  UserPlusIcon,
+  VideoCameraIcon,
   StarIcon,
+  TrashIcon,
+  ChevronRightIcon,
 } from "react-native-heroicons/solid";
 
 const FriendScreen = ({ route, navigation, theme }) => {
@@ -19,10 +21,10 @@ const FriendScreen = ({ route, navigation, theme }) => {
     route.params;
 
   return (
-    <SafeAreaView style={tw`flex-1 items-center justify-center bg-gray-100`}>
+    <SafeAreaView style={tw`flex-1 items-center bg-gray-100`}>
       {/* Profile Information */}
       <View
-        style={tw`border-2 w-80 h-75 items-center bg-white border-gray-200 rounded-2xl`}
+        style={tw`border-2 w-80 h-75 items-center mt-22 bg-white border-gray-200 rounded-2xl`}
       >
         <View
           style={[
@@ -65,12 +67,38 @@ const FriendScreen = ({ route, navigation, theme }) => {
           </View>
 
           <View style={tw`items-center`}>
-            <TouchableOpacity style={tw`rounded-full p-3 bg-[#FBEC5D] mb-1`}>
-              <StarIcon size={36} color="white" />
+            <TouchableOpacity style={tw`rounded-full p-3 bg-[#97f0b9] mb-1`}>
+              <VideoCameraIcon size={36} color="white" />
             </TouchableOpacity>
-            <Text style={tw`text-gray-500`}>Favourite</Text>
+            <Text style={tw`text-gray-500`}>Video Call</Text>
           </View>
         </View>
+      </View>
+      <View style={tw`mt-5`}>
+        <TouchableOpacity
+          onPress={() => setStatusModalVisible(true)}
+          style={tw`flex-row items-center justify-between w-80 border-2 mb-3 px-3 py-3 rounded-xl border-gray-200`}
+        >
+          <View style={tw`rounded-full p-2 bg-[#FDDA0D]`}>
+            <StarIcon size={24} color="white" />
+          </View>
+          <View style={tw`flex-1 pl-5`}>
+            <Text>Add to Favourites</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={tw`flex-row items-center justify-between w-80 border-2 mb-3 px-3 py-3 rounded-xl border-gray-200`}
+        >
+          <View style={tw`rounded-full p-2 bg-[#f27480]`}>
+            <TrashIcon size={24} color="white" />
+          </View>
+          <View style={tw`flex-1 pl-5`}>
+            <Text>Delete Contact</Text>
+          </View>
+          <View>
+            <ChevronRightIcon size={24} color="#8e8f91" />
+          </View>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
