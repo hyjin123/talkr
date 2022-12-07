@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React from "react";
+import { auth, db } from "../firebase";
 import tw from "twrnc";
 import {
   ChatBubbleLeftRightIcon,
@@ -13,15 +14,32 @@ import {
   StarIcon,
   TrashIcon,
   ChevronRightIcon,
+  ArrowLeftIcon,
 } from "react-native-heroicons/solid";
+import { useNavigation } from "@react-navigation/core";
 
-const FriendScreen = ({ route, navigation, theme }) => {
+const FriendScreen = ({ route, theme }) => {
   // destrucutre the params sent through navigation
   const { id, friendAvatar, friendName, friendEmail, friendStatus } =
     route.params;
 
+  const navigation = useNavigation();
+
+  // handle when a user adds a friend to their favourite list
+  const handleFavourite = () => {
+    db.collection("users").doc(userid).set({});
+  };
+
   return (
     <SafeAreaView style={tw`flex-1 items-center bg-gray-100`}>
+      {/* Go back button */}
+      <TouchableOpacity
+        onPress={() => navigation.goBack()}
+        style={tw`absolute top-22 left-10`}
+      >
+        <ArrowLeftIcon size={30} color="black" />
+      </TouchableOpacity>
+
       {/* Profile Information */}
       <View
         style={tw`border-2 w-80 h-75 items-center mt-22 bg-white border-gray-200 rounded-2xl`}
@@ -58,7 +76,15 @@ const FriendScreen = ({ route, navigation, theme }) => {
         <View style={tw`flex-row w-50 justify-between`}>
           <View style={tw`items-center`}>
             <TouchableOpacity
-              onPress={() => navigation.navigate("Home")}
+              onPress={() =>
+                navigation.navigate("Chat", {
+                  id,
+                  friendAvatar,
+                  friendName,
+                  friendEmail,
+                  friendStatus,
+                })
+              }
               style={tw`rounded-full p-3 bg-[#90bef5] mb-1`}
             >
               <ChatBubbleLeftRightIcon size={36} color="white" />
@@ -76,7 +102,7 @@ const FriendScreen = ({ route, navigation, theme }) => {
       </View>
       <View style={tw`mt-5`}>
         <TouchableOpacity
-          onPress={() => setStatusModalVisible(true)}
+          onPress={handleFavourite}
           style={tw`flex-row items-center justify-between w-80 border-2 mb-3 px-3 py-3 rounded-xl border-gray-200`}
         >
           <View style={tw`rounded-full p-2 bg-[#FDDA0D]`}>

@@ -23,6 +23,7 @@ const ContactsScreen = ({ theme }) => {
 
   // get the logged in user email through auth
   const loggedInUserEmail = auth.currentUser.email;
+  const userId = auth.currentUser.uid;
 
   useEffect(() => {
     // get all of the user's friend emails
@@ -60,11 +61,11 @@ const ContactsScreen = ({ theme }) => {
     friendStatus
   ) => {
     navigation.navigate("Friend", {
+      id: userId,
       friendAvatar,
       friendName,
       friendEmail,
       friendStatus,
-      theme,
     });
   };
 
