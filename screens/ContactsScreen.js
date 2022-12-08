@@ -123,7 +123,7 @@ const ContactsScreen = ({ theme, favouriteChange, setFavouriteChange }) => {
                   ]}
                 />
               </View>
-              <View style={tw`justify-center`}>
+              <View style={tw`justify-center w-35`}>
                 <Text style={tw`font-semibold text-base`}>{item.value}</Text>
                 {item.status ? (
                   <Text style={tw`pb-0.8 pt-0.2`}>"{item.status}"</Text>
@@ -136,7 +136,7 @@ const ContactsScreen = ({ theme, favouriteChange, setFavouriteChange }) => {
                 </Text>
               </View>
               {/* if this friend is a favourite, display a star */}
-              {favourites[item.value] ? (
+              {favourites?.[item.value] ? (
                 <View style={tw`p-1.2 mb-auto mt-auto ml-20`}>
                   <StarIcon size={22} color="#FDDA0D" />
                 </View>

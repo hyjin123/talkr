@@ -35,6 +35,7 @@ const ChatScreen = ({ route, navigation, theme }) => {
 
   // get the logged in user email through auth
   const loggedInUserEmail = auth.currentUser.email;
+  const userId = auth.currentUser.uid;
 
   // get a chat collection snapchat from firebase
   const [chatsSnapshot] = useCollection(
@@ -116,7 +117,7 @@ const ChatScreen = ({ route, navigation, theme }) => {
   const handleFriendClick = () => {
     // navigate to the chat screen
     navigation.navigate("Friend", {
-      id,
+      id: userId,
       friendAvatar,
       friendName,
       friendEmail,

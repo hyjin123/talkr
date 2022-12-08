@@ -4,6 +4,7 @@ import {
   SafeAreaView,
   Image,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { auth, db } from "../firebase";
@@ -15,10 +16,13 @@ import {
   TrashIcon,
   ChevronRightIcon,
   ArrowLeftIcon,
+  NoSymbolIcon,
 } from "react-native-heroicons/solid";
+import Modal from "react-native-modal";
 import { StarIcon as StarIconOutline } from "react-native-heroicons/outline";
 import { useNavigation } from "@react-navigation/core";
 import { getFavourites } from "../utils/getFavourites";
+import { getBlocked } from "../utils/getBlocked";
 
 const FriendScreen = ({
   route,
@@ -28,6 +32,8 @@ const FriendScreen = ({
 }) => {
   // to force a re-render of the friends page after favourite has been changed
   const [favourites, setFavourites] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [chatId, setChatId] = useState("");
 
   // destrucutre the params sent through navigation
   const { id, friendAvatar, friendName, friendEmail, friendStatus } =
@@ -39,7 +45,7 @@ const FriendScreen = ({
   // handle when a user adds a friend to their favourite list, add their name to the favourites field in the users collection
   const handleFavourite = () => {
     // if removing from favourite list
-    if (favourites[friendName]) {
+    if (favourites?.[friendName]) {
       db.collection("users")
         .doc(id)
         .set(
@@ -77,10 +83,50 @@ const FriendScreen = ({
     getFavourites(loggedInUserEmail).then((data) => {
       setFavourites(data);
     });
+
+    // retrieve the chat Id
+    getChatId(loggedInUserEmail, friendEmail).then((data) => setChatId(data));
   }, [favouriteChange]);
+
+  const handleContactDelete = () => {
+    // modify the firebase database to handle this action
+    db.collection("chats")
+      .doc(chatId)
+      .set(
+        {
+          blocked: { [loggedInUserEmail]: true },
+        },
+        {
+          merge: true,
+        }
+      );
+
+    setModalVisible(false);
+  };
 
   return (
     <SafeAreaView style={tw`flex-1 items-center bg-gray-100`}>
+      {/* Modal - Block Contact */}
+      <Modal
+        isVisible={modalVisible}
+        onBackdropPress={() => setModalVisible(false)}
+      >
+        <View
+          style={tw`flex-1 justify-center items-center bg-white my-75 mx-2 rounded-xl px-4`}
+        >
+          <Text style={tw`font-medium text-base text-center`}>
+            Are you sure you want to block this contact? You won't be able to
+            send or receive messages from this contact.
+          </Text>
+          <TouchableOpacity
+            onPress={handleContactDelete}
+            style={tw`bg-[${theme?.primary[0]}] font-bold rounded-full px-15 py-2 mt-6`}
+          >
+            <Text style={tw`text-black`}>Confirm</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+
       {/* Go back button */}
       <TouchableOpacity
         onPress={() => navigation.goBack()}
@@ -178,13 +224,14 @@ const FriendScreen = ({
           )}
         </TouchableOpacity>
         <TouchableOpacity
+          onPress={() => setModalVisible(true)}
           style={tw`flex-row items-center justify-between w-80 border-2 mb-3 px-3 py-3 rounded-xl border-gray-200`}
         >
           <View style={tw`rounded-full p-2 bg-[#f27480]`}>
-            <TrashIcon size={24} color="white" />
+            <NoSymbolIcon size={24} color="white" />
           </View>
           <View style={tw`flex-1 pl-5`}>
-            <Text>Delete Contact</Text>
+            <Text>Block Contact</Text>
           </View>
           <View>
             <ChevronRightIcon size={24} color="#8e8f91" />
