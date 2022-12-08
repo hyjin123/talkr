@@ -7,7 +7,12 @@ import ContactsScreen from "../screens/ContactsScreen";
 import MyTabBar from "../components/MyTabBar";
 import tw from "twrnc";
 
-const TabNavigator = ({ theme, setThemeChange }) => {
+const TabNavigator = ({
+  theme,
+  setThemeChange,
+  favouriteChange,
+  setFavouriteChange,
+}) => {
   const Tab = createBottomTabNavigator();
 
   return (
@@ -32,7 +37,14 @@ const TabNavigator = ({ theme, setThemeChange }) => {
             headerShown: false,
           }}
         >
-          {(props) => <ContactsScreen {...props} theme={theme} />}
+          {(props) => (
+            <ContactsScreen
+              {...props}
+              theme={theme}
+              favouriteChange={favouriteChange}
+              setFavouriteChange={setFavouriteChange}
+            />
+          )}
         </Tab.Screen>
 
         <Tab.Screen

@@ -16,7 +16,7 @@ import { useNavigation } from "@react-navigation/core";
 import { StarIcon } from "react-native-heroicons/solid";
 import { getFavourites } from "../utils/getFavourites";
 
-const ContactsScreen = ({ theme }) => {
+const ContactsScreen = ({ theme, favouriteChange, setFavouriteChange }) => {
   const [data1, setData1] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [input, setInput] = useState("");
@@ -40,7 +40,6 @@ const ContactsScreen = ({ theme }) => {
             lastSeen: item.lastSeen,
             photoURL: item.photoURL,
             status: item.status,
-            favourites: item.favourites,
           };
         });
         setData1(tempArray);
@@ -59,15 +58,14 @@ const ContactsScreen = ({ theme }) => {
       );
       setFilteredData(filteredData);
     }
-  }, [input]);
+  }, [input, favouriteChange]);
 
   // when a user clicks on the friend's contact, it will take them to their profile.
   const handleClickContact = (
     friendName,
     friendEmail,
     friendAvatar,
-    friendStatus,
-    favourite
+    friendStatus
   ) => {
     navigation.navigate("Friend", {
       id: userId,
@@ -75,7 +73,6 @@ const ContactsScreen = ({ theme }) => {
       friendName,
       friendEmail,
       friendStatus,
-      favourite,
     });
   };
 
@@ -112,8 +109,7 @@ const ContactsScreen = ({ theme }) => {
                   item.value,
                   item.email,
                   item.photoURL,
-                  item.status,
-                  favourites[item.value]
+                  item.status
                 )
               }
               style={tw`flex-row my-3`}

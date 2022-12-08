@@ -5,7 +5,7 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { auth, db } from "../firebase";
 import tw from "twrnc";
 import {
@@ -18,29 +18,66 @@ import {
 } from "react-native-heroicons/solid";
 import { StarIcon as StarIconOutline } from "react-native-heroicons/outline";
 import { useNavigation } from "@react-navigation/core";
+import { getFavourites } from "../utils/getFavourites";
 
-const FriendScreen = ({ route, theme }) => {
+const FriendScreen = ({
+  route,
+  theme,
+  favouriteChange,
+  setFavouriteChange,
+}) => {
+  // to force a re-render of the friends page after favourite has been changed
+  const [favourites, setFavourites] = useState(null);
+
   // destrucutre the params sent through navigation
-  const { id, friendAvatar, friendName, friendEmail, friendStatus, favourite } =
+  const { id, friendAvatar, friendName, friendEmail, friendStatus } =
     route.params;
 
   const navigation = useNavigation();
+  const loggedInUserEmail = auth.currentUser.email;
 
   // handle when a user adds a friend to their favourite list, add their name to the favourites field in the users collection
   const handleFavourite = () => {
-    db.collection("users")
-      .doc(id)
-      .set(
-        {
-          favourites: {
-            [friendName]: true,
+    // if removing from favourite list
+    if (favourites[friendName]) {
+      db.collection("users")
+        .doc(id)
+        .set(
+          {
+            favourites: {
+              [friendName]: false,
+            },
           },
-        },
-        {
-          merge: true,
-        }
-      );
+          {
+            merge: true,
+          }
+        );
+    } else {
+      // if adding to the favourite list
+      db.collection("users")
+        .doc(id)
+        .set(
+          {
+            favourites: {
+              [friendName]: true,
+            },
+          },
+          {
+            merge: true,
+          }
+        );
+    }
+
+    // this will trigger the useEffect in the contacts page so it can re-render with new info
+    setFavouriteChange(!favouriteChange);
   };
+
+  useEffect(() => {
+    // this is needed, every time there is a favourite change, you need to get the new favourites list and re-render the component
+    getFavourites(loggedInUserEmail).then((data) => {
+      setFavourites(data);
+    });
+  }, [favouriteChange]);
 
   return (
     <SafeAreaView style={tw`flex-1 items-center bg-gray-100`}>
@@ -75,7 +112,7 @@ const FriendScreen = ({ route, theme }) => {
           <Text>{friendEmail}</Text>
         </View>
 
-        {favourite ? (
+        {favourites?.[friendName] ? (
           <View style={tw`mt-1 mb-2`}>
             <StarIcon size={22} color="#FDDA0D" />
           </View>
@@ -130,7 +167,7 @@ const FriendScreen = ({ route, theme }) => {
           <View style={tw`rounded-full p-2 bg-[#FDDA0D]`}>
             <StarIcon size={24} color="white" />
           </View>
-          {favourite ? (
+          {favourites?.[friendName] ? (
             <View style={tw`flex-1 pl-5`}>
               <Text>Remove from Favourites</Text>
             </View>
