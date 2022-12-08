@@ -16,18 +16,30 @@ import {
   ChevronRightIcon,
   ArrowLeftIcon,
 } from "react-native-heroicons/solid";
+import { StarIcon as StarIconOutline } from "react-native-heroicons/outline";
 import { useNavigation } from "@react-navigation/core";
 
 const FriendScreen = ({ route, theme }) => {
   // destrucutre the params sent through navigation
-  const { id, friendAvatar, friendName, friendEmail, friendStatus } =
+  const { id, friendAvatar, friendName, friendEmail, friendStatus, favourite } =
     route.params;
 
   const navigation = useNavigation();
 
-  // handle when a user adds a friend to their favourite list
+  // handle when a user adds a friend to their favourite list, add their name to the favourites field in the users collection
   const handleFavourite = () => {
-    db.collection("users").doc(userid).set({});
+    db.collection("users")
+      .doc(id)
+      .set(
+        {
+          favourites: {
+            [friendName]: true,
+          },
+        },
+        {
+          merge: true,
+        }
+      );
   };
 
   return (
@@ -58,17 +70,27 @@ const FriendScreen = ({ route, theme }) => {
             ]}
           />
         </View>
-        <View style={tw`mt-14 mb-6 items-center`}>
+        <View style={tw`mt-14 mb-1 items-center`}>
           <Text style={tw`text-2xl font-bold mb-1`}>{friendName}</Text>
           <Text>{friendEmail}</Text>
         </View>
 
+        {favourite ? (
+          <View style={tw`mt-1 mb-2`}>
+            <StarIcon size={22} color="#FDDA0D" />
+          </View>
+        ) : (
+          <View style={tw`mt-1 mb-2`}>
+            <StarIconOutline size={22} color="black" />
+          </View>
+        )}
+
         {friendStatus ? (
-          <View style={tw`mt-3 mb-10`}>
+          <View style={tw`mt-3 mb-7`}>
             <Text>"{friendStatus}"</Text>
           </View>
         ) : (
-          <View style={tw`mt-3 mb-10`}>
+          <View style={tw`mt-3 mb-7`}>
             <Text>No Status</Text>
           </View>
         )}
@@ -108,9 +130,15 @@ const FriendScreen = ({ route, theme }) => {
           <View style={tw`rounded-full p-2 bg-[#FDDA0D]`}>
             <StarIcon size={24} color="white" />
           </View>
-          <View style={tw`flex-1 pl-5`}>
-            <Text>Add to Favourites</Text>
-          </View>
+          {favourite ? (
+            <View style={tw`flex-1 pl-5`}>
+              <Text>Remove from Favourites</Text>
+            </View>
+          ) : (
+            <View style={tw`flex-1 pl-5`}>
+              <Text>Add to Favourites</Text>
+            </View>
+          )}
         </TouchableOpacity>
         <TouchableOpacity
           style={tw`flex-row items-center justify-between w-80 border-2 mb-3 px-3 py-3 rounded-xl border-gray-200`}

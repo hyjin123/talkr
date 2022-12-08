@@ -13,11 +13,14 @@ import { auth, db } from "../firebase";
 import { getFriendsEmails, getFriendsData } from "../utils/getFriendData";
 import TimeAgo from "react-native-timeago";
 import { useNavigation } from "@react-navigation/core";
+import { StarIcon } from "react-native-heroicons/solid";
+import { getFavourites } from "../utils/getFavourites";
 
 const ContactsScreen = ({ theme }) => {
   const [data1, setData1] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [input, setInput] = useState("");
+  const [favourites, setFavourites] = useState(null);
 
   const navigation = useNavigation();
 
@@ -37,9 +40,14 @@ const ContactsScreen = ({ theme }) => {
             lastSeen: item.lastSeen,
             photoURL: item.photoURL,
             status: item.status,
+            favourites: item.favourites,
           };
         });
         setData1(tempArray);
+      });
+
+      getFavourites(loggedInUserEmail).then((data) => {
+        setFavourites(data);
       });
     });
 
@@ -58,7 +66,8 @@ const ContactsScreen = ({ theme }) => {
     friendName,
     friendEmail,
     friendAvatar,
-    friendStatus
+    friendStatus,
+    favourite
   ) => {
     navigation.navigate("Friend", {
       id: userId,
@@ -66,6 +75,7 @@ const ContactsScreen = ({ theme }) => {
       friendName,
       friendEmail,
       friendStatus,
+      favourite,
     });
   };
 
@@ -102,7 +112,8 @@ const ContactsScreen = ({ theme }) => {
                   item.value,
                   item.email,
                   item.photoURL,
-                  item.status
+                  item.status,
+                  favourites[item.value]
                 )
               }
               style={tw`flex-row my-3`}
@@ -118,7 +129,6 @@ const ContactsScreen = ({ theme }) => {
               </View>
               <View style={tw`justify-center`}>
                 <Text style={tw`font-semibold text-base`}>{item.value}</Text>
-                {/* <Text style={tw`text-gray-800 text-xs`}>{item.email}</Text> */}
                 {item.status ? (
                   <Text style={tw`pb-0.8 pt-0.2`}>"{item.status}"</Text>
                 ) : (
@@ -129,6 +139,14 @@ const ContactsScreen = ({ theme }) => {
                   <TimeAgo time={item.lastSeen.toDate()} />
                 </Text>
               </View>
+              {/* if this friend is a favourite, display a star */}
+              {favourites[item.value] ? (
+                <View style={tw`p-1.2 mb-auto mt-auto ml-20`}>
+                  <StarIcon size={22} color="#FDDA0D" />
+                </View>
+              ) : (
+                <></>
+              )}
             </TouchableOpacity>
           )}
           renderCustomSectionHeader={(section) => (

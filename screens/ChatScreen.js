@@ -131,7 +131,7 @@ const ChatScreen = ({ route, navigation, theme }) => {
       <SafeAreaView style={tw`bg-gray-100 flex-1`}>
         {/* Header */}
         <View style={tw`flex-row justify-between items-center p-5 bg-white`}>
-          <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
             <ArrowLeftIcon size={24} color="black" />
           </TouchableOpacity>
           <TouchableOpacity
