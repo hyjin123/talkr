@@ -19,7 +19,7 @@ import { getBlockedList } from "../utils/getBlockedList";
 import { getChatId } from "../utils/getChatId";
 import { NoSymbolIcon } from "react-native-heroicons/solid";
 
-const ContactsScreen = ({ theme, favouriteChange }) => {
+const ContactsScreen = ({ theme, favouriteChange, blockChange }) => {
   const [data1, setData1] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [input, setInput] = useState("");
@@ -75,7 +75,7 @@ const ContactsScreen = ({ theme, favouriteChange }) => {
       );
       setFilteredData(filteredData);
     }
-  }, [input, favouriteChange]);
+  }, [input, favouriteChange, blockChange]);
 
   // when a user clicks on the friend's contact, it will take them to their profile.
   const handleClickContact = (

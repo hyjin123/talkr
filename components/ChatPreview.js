@@ -62,7 +62,7 @@ const ChatPreview = ({ id, users, loggedInUserEmail, theme }) => {
       id,
       friendAvatar,
       friendName,
-      friendEmail,
+      friendEmail: friendEmail[0],
       friendStatus,
     });
   };

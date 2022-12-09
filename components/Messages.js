@@ -1,5 +1,5 @@
 import { View, Text } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import tw from "twrnc";
 import moment from "moment";
 import { LinearGradient } from "expo-linear-gradient";

@@ -11,11 +11,11 @@ const FriendAvatar = ({ id, users, loggedInUserEmail, input, theme }) => {
   const navigation = useNavigation();
 
   // use the function that filters out your email and leaves only your friend's email
-  const friendEmail = getFriendEmail(users, loggedInUserEmail);
+  const friendEmail = getFriendEmail(users, loggedInUserEmail)[0];
 
   // get the avatar of the friend
   const [friendSnapshot] = useCollection(
-    db.collection("users").where("email", "==", friendEmail[0])
+    db.collection("users").where("email", "==", friendEmail)
   );
 
   const friendAvatar = friendSnapshot?.docs?.[0]?.data().photoURL;

@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   TextInput,
 } from "react-native";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import tw from "twrnc";
 import { ArrowLeftIcon, UserIcon } from "react-native-heroicons/solid";
 import {
@@ -22,9 +22,13 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import firebase from "firebase";
 import Messages from "../components/Messages";
 import TimeAgo from "react-native-timeago";
+import { getBlockedList } from "../utils/getBlockedList";
+import { getChatId } from "../utils/getChatId";
 
 const ChatScreen = ({ route, navigation, theme }) => {
   const [input, setInput] = useState("");
+  const [blockedList, setBlockedList] = useState(null);
+
   const scrollViewRef = useRef();
 
   const { id, friendAvatar, friendName, friendEmail, friendStatus } =
@@ -57,6 +61,16 @@ const ChatScreen = ({ route, navigation, theme }) => {
       .collection("messages")
       .orderBy("timestamp", "asc")
   );
+
+  useEffect(() => {
+    // retrieve the chat Id and get blocked list
+    getChatId(loggedInUserEmail, friendEmail).then((data) => {
+      // get the blocked list
+      getBlockedList(data).then((data) => {
+        setBlockedList(data);
+      });
+    });
+  }, []);
 
   // showing all the messages
   const showMessages = () => {
@@ -205,43 +219,60 @@ const ChatScreen = ({ route, navigation, theme }) => {
         </ScrollView>
 
         {/* Keyboard Input */}
-        <View style={tw`bg-gray-100 flex-row items-center justify-center pb-4`}>
+        {blockedList?.[loggedInUserEmail] || blockedList?.[friendEmail] ? (
           <View
-            style={tw`h-14 border-2 border-r-0 items-center justify-center  border-gray-400 p-5 pl-2 rounded-l-3xl`}
+            style={tw`bg-gray-100 flex-row items-center justify-center pb-4`}
           >
-            <TouchableOpacity
-              style={tw`items-center justify-center w-10 h-10 rounded-full`}
+            <View
+              style={tw`h-14 border-2 border-r-0 items-center justify-center  border-gray-400 p-5 pl-6 rounded-l-3xl`}
+            ></View>
+            <View style={tw`h-14 border-b-2 border-t-2 border-gray-400 py-4`}>
+              <Text>You can't send messages to this user.</Text>
+            </View>
+            <View
+              style={tw`h-14 border-2 border-l-0 items-center justify-center border-gray-400 p-6 rounded-r-3xl`}
+            ></View>
+          </View>
+        ) : (
+          <View
+            style={tw`bg-gray-100 flex-row items-center justify-center pb-4`}
+          >
+            <View
+              style={tw`h-14 border-2 border-r-0 items-center justify-center  border-gray-400 p-5 pl-2 rounded-l-3xl`}
             >
-              <MicrophoneIcon size={22} color="black" />
-            </TouchableOpacity>
-          </View>
-          <View style={tw`h-14 border-b-2 border-t-2 border-gray-400`}>
-            <TextInput
-              placeholder="Type Message..."
-              placeholderTextColor="gray"
-              value={input}
-              onChangeText={(text) => setInput(text)}
-              style={tw`border-gray-300 w-50 h-13`}
-            />
-          </View>
-
-          <View
-            style={tw`h-14 border-2 border-l-0 items-center justify-center border-gray-400 p-4 rounded-r-3xl`}
-          >
-            {input.length > 0 ? (
               <TouchableOpacity
-                onPress={sendMessage}
-                style={tw`flex-1 items-center justify-center`}
+                style={tw`items-center justify-center w-10 h-10 rounded-full`}
               >
-                <PaperAirplaneIcon size={22} color="black" />
+                <MicrophoneIcon size={22} color="black" />
               </TouchableOpacity>
-            ) : (
-              <View style={tw`flex-1 items-center justify-center`}>
-                <PaperAirplaneIcon size={22} color="black" />
-              </View>
-            )}
+            </View>
+            <View style={tw`h-14 border-b-2 border-t-2 border-gray-400`}>
+              <TextInput
+                placeholder="Type Message..."
+                placeholderTextColor="gray"
+                value={input}
+                onChangeText={(text) => setInput(text)}
+                style={tw`border-gray-300 w-50 h-13`}
+              />
+            </View>
+            <View
+              style={tw`h-14 border-2 border-l-0 items-center justify-center border-gray-400 p-4 rounded-r-3xl`}
+            >
+              {input.length > 0 ? (
+                <TouchableOpacity
+                  onPress={sendMessage}
+                  style={tw`flex-1 items-center justify-center`}
+                >
+                  <PaperAirplaneIcon size={22} color="black" />
+                </TouchableOpacity>
+              ) : (
+                <View style={tw`flex-1 items-center justify-center`}>
+                  <PaperAirplaneIcon size={22} color="black" />
+                </View>
+              )}
+            </View>
           </View>
-        </View>
+        )}
       </SafeAreaView>
     </>
   );
