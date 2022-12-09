@@ -34,28 +34,31 @@ const ContactsScreen = ({ theme, favouriteChange }) => {
   useEffect(() => {
     // get all of the user's friend emails
     getFriendsEmails(loggedInUserEmail).then((friendEmails) => {
-      getFriendsData(friendEmails).then((data) => {
-        let tempArray = data.map((item) => {
-          let blocked;
-          // retrieve the chat Id and get blocked list
-          getChatId(loggedInUserEmail, item.email).then((data) => {
-            // get the blocked list
-            getBlockedList(data).then((data) => {
-              blocked = data;
-              console.log(blocked);
-            });
-          });
-          return {
-            value: item.displayName,
-            key: item.displayName,
-            email: item.email,
-            lastSeen: item.lastSeen,
-            photoURL: item.photoURL,
-            status: item.status,
-            blocked: blocked,
-          };
-        });
+      getFriendsData(friendEmails).then(async (data) => {
+        const tempArray = await Promise.all(
+          data.map(async (item) => {
+            let blocked;
+            // retrieve the chat Id and get blocked list
+            await getChatId(loggedInUserEmail, item.email).then(
+              async (data) => {
+                // get the blocked list
+                await getBlockedList(data).then((data) => {
+                  blocked = data;
+                });
+              }
+            );
 
+            return {
+              value: item.displayName,
+              key: item.displayName,
+              email: item.email,
+              lastSeen: item.lastSeen,
+              photoURL: item.photoURL,
+              status: item.status,
+              blocked: blocked,
+            };
+          })
+        );
         setData1(tempArray);
       });
 
@@ -149,7 +152,9 @@ const ContactsScreen = ({ theme, favouriteChange }) => {
                   <TimeAgo time={item.lastSeen.toDate()} />
                 </Text>
               </View>
+
               {/* if this friend is a favourite, display a star */}
+              {/* conditionals are done for css reasons, for example, if the contact is both favourite and blocked etc */}
               {favourites?.[item.value] ? (
                 <View style={tw`p-1.2 mb-auto mt-auto ml-12`}>
                   <StarIcon size={22} color="#FDDA0D" />
@@ -158,8 +163,17 @@ const ContactsScreen = ({ theme, favouriteChange }) => {
                 <></>
               )}
 
-              {item.blocked?.[item.email] ? (
-                <View style={tw`p-1.2 mb-auto mt-auto ml-20`}>
+              {item.blocked?.[loggedInUserEmail] &&
+              !favourites?.[item.value] ? (
+                <View style={tw`p-1.2 mb-auto mt-auto ml-12`}>
+                  <NoSymbolIcon size={22} color="red" />
+                </View>
+              ) : (
+                <></>
+              )}
+
+              {item.blocked?.[loggedInUserEmail] && favourites?.[item.value] ? (
+                <View style={tw`p-1.2 mb-auto mt-auto -ml-1`}>
                   <NoSymbolIcon size={22} color="red" />
                 </View>
               ) : (

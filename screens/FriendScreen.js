@@ -12,7 +12,6 @@ import {
   ChatBubbleLeftRightIcon,
   VideoCameraIcon,
   StarIcon,
-  TrashIcon,
   ChevronRightIcon,
   ArrowLeftIcon,
   NoSymbolIcon,
@@ -96,7 +95,7 @@ const FriendScreen = ({
         setBlockedList(data);
       });
     });
-  }, [favouriteChange]);
+  }, [favouriteChange, blockChange]);
 
   const handleContactDelete = (status) => {
     // modify the firebase database to handle this action
@@ -114,6 +113,7 @@ const FriendScreen = ({
 
     setModalVisible(false);
     setUnblockModalVisible(false);
+    setBlockChange(!blockChange);
   };
 
   return (
