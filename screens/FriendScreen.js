@@ -4,7 +4,6 @@ import {
   SafeAreaView,
   Image,
   TouchableOpacity,
-  Alert,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { auth, db } from "../firebase";
@@ -22,18 +21,23 @@ import Modal from "react-native-modal";
 import { StarIcon as StarIconOutline } from "react-native-heroicons/outline";
 import { useNavigation } from "@react-navigation/core";
 import { getFavourites } from "../utils/getFavourites";
-import { getBlocked } from "../utils/getBlocked";
+import { getChatId } from "../utils/getChatId";
+import { getBlockedList } from "../utils/getBlockedList";
 
 const FriendScreen = ({
   route,
   theme,
   favouriteChange,
   setFavouriteChange,
+  blockChange,
+  setBlockChange,
 }) => {
   // to force a re-render of the friends page after favourite has been changed
   const [favourites, setFavourites] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [unblockModalVisible, setUnblockModalVisible] = useState(false);
   const [chatId, setChatId] = useState("");
+  const [blockedList, setBlockedList] = useState(null);
 
   // destrucutre the params sent through navigation
   const { id, friendAvatar, friendName, friendEmail, friendStatus } =
@@ -84,17 +88,24 @@ const FriendScreen = ({
       setFavourites(data);
     });
 
-    // retrieve the chat Id
-    getChatId(loggedInUserEmail, friendEmail).then((data) => setChatId(data));
+    // retrieve the chat Id and get blocked list
+    getChatId(loggedInUserEmail, friendEmail).then((data) => {
+      setChatId(data);
+      // get the blocked list
+      getBlockedList(data).then((data) => {
+        setBlockedList(data);
+      });
+    });
   }, [favouriteChange]);
 
-  const handleContactDelete = () => {
+  const handleContactDelete = (status) => {
     // modify the firebase database to handle this action
+    // if the user is blocking someone, set it to true. If the user is unblocking someone, set it to false
     db.collection("chats")
       .doc(chatId)
       .set(
         {
-          blocked: { [loggedInUserEmail]: true },
+          blocked: { [loggedInUserEmail]: status },
         },
         {
           merge: true,
@@ -102,6 +113,7 @@ const FriendScreen = ({
       );
 
     setModalVisible(false);
+    setUnblockModalVisible(false);
   };
 
   return (
@@ -119,7 +131,28 @@ const FriendScreen = ({
             send or receive messages from this contact.
           </Text>
           <TouchableOpacity
-            onPress={handleContactDelete}
+            onPress={() => handleContactDelete(true)}
+            style={tw`bg-[${theme?.primary[0]}] font-bold rounded-full px-15 py-2 mt-6`}
+          >
+            <Text style={tw`text-black`}>Confirm</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+
+      {/* Modal - Un-Block Contact */}
+      <Modal
+        isVisible={unblockModalVisible}
+        onBackdropPress={() => setUnblockModalVisible(false)}
+      >
+        <View
+          style={tw`flex-1 justify-center items-center bg-white my-75 mx-2 rounded-xl px-4`}
+        >
+          <Text style={tw`font-medium text-base text-center`}>
+            Are you sure you want to un-block this contact? You will be able to
+            send or receive messages from this contact.
+          </Text>
+          <TouchableOpacity
+            onPress={() => handleContactDelete(false)}
             style={tw`bg-[${theme?.primary[0]}] font-bold rounded-full px-15 py-2 mt-6`}
           >
             <Text style={tw`text-black`}>Confirm</Text>
@@ -157,16 +190,25 @@ const FriendScreen = ({
           <Text style={tw`text-2xl font-bold mb-1`}>{friendName}</Text>
           <Text>{friendEmail}</Text>
         </View>
+        <View style={tw`flex-row`}>
+          {favourites?.[friendName] ? (
+            <View style={tw`mt-1 mb-2`}>
+              <StarIcon size={22} color="#FDDA0D" />
+            </View>
+          ) : (
+            <View style={tw`mt-1 mb-2`}>
+              <StarIconOutline size={22} color="black" />
+            </View>
+          )}
 
-        {favourites?.[friendName] ? (
-          <View style={tw`mt-1 mb-2`}>
-            <StarIcon size={22} color="#FDDA0D" />
-          </View>
-        ) : (
-          <View style={tw`mt-1 mb-2`}>
-            <StarIconOutline size={22} color="black" />
-          </View>
-        )}
+          {blockedList?.[loggedInUserEmail] ? (
+            <View style={tw`mt-1 mb-2`}>
+              <NoSymbolIcon size={22} color="red" />
+            </View>
+          ) : (
+            <></>
+          )}
+        </View>
 
         {friendStatus ? (
           <View style={tw`mt-3 mb-7`}>
@@ -223,20 +265,38 @@ const FriendScreen = ({
             </View>
           )}
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => setModalVisible(true)}
-          style={tw`flex-row items-center justify-between w-80 border-2 mb-3 px-3 py-3 rounded-xl border-gray-200`}
-        >
-          <View style={tw`rounded-full p-2 bg-[#f27480]`}>
-            <NoSymbolIcon size={24} color="white" />
-          </View>
-          <View style={tw`flex-1 pl-5`}>
-            <Text>Block Contact</Text>
-          </View>
-          <View>
-            <ChevronRightIcon size={24} color="#8e8f91" />
-          </View>
-        </TouchableOpacity>
+
+        {blockedList?.[loggedInUserEmail] ? (
+          <TouchableOpacity
+            onPress={() => setUnblockModalVisible(true)}
+            style={tw`flex-row items-center justify-between w-80 border-2 mb-3 px-3 py-3 rounded-xl border-gray-200`}
+          >
+            <View style={tw`rounded-full p-2 bg-[#f27480]`}>
+              <NoSymbolIcon size={24} color="white" />
+            </View>
+            <View style={tw`flex-1 pl-5`}>
+              <Text>Unblock Contact</Text>
+            </View>
+            <View>
+              <ChevronRightIcon size={24} color="#8e8f91" />
+            </View>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            onPress={() => setModalVisible(true)}
+            style={tw`flex-row items-center justify-between w-80 border-2 mb-3 px-3 py-3 rounded-xl border-gray-200`}
+          >
+            <View style={tw`rounded-full p-2 bg-[#f27480]`}>
+              <NoSymbolIcon size={24} color="white" />
+            </View>
+            <View style={tw`flex-1 pl-5`}>
+              <Text>Block Contact</Text>
+            </View>
+            <View>
+              <ChevronRightIcon size={24} color="#8e8f91" />
+            </View>
+          </TouchableOpacity>
+        )}
       </View>
     </SafeAreaView>
   );

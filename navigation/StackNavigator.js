@@ -24,6 +24,7 @@ const StackNavigator = () => {
   // this state is used to trigger the useeffect again when a user changes the theme
   const [themeChange, setThemeChange] = useState([]);
   const [favouriteChange, setFavouriteChange] = useState(false);
+  const [blockChange, setBlockChange] = useState(false);
 
   const Stack = createNativeStackNavigator();
 
@@ -62,7 +63,7 @@ const StackNavigator = () => {
             theme={theme}
             setThemeChange={setThemeChange}
             favouriteChange={favouriteChange}
-            setFavouriteChang={setFavouriteChange}
+            blockChange={blockChange}
           />
         )}
       </Stack.Screen>
@@ -78,6 +79,8 @@ const StackNavigator = () => {
             theme={theme}
             favouriteChange={favouriteChange}
             setFavouriteChange={setFavouriteChange}
+            blockChange={blockChange}
+            setBlockChange={setBlockChange}
           />
         )}
       </Stack.Screen>

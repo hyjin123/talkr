@@ -11,7 +11,7 @@ const TabNavigator = ({
   theme,
   setThemeChange,
   favouriteChange,
-  setFavouriteChange,
+  blockChange,
 }) => {
   const Tab = createBottomTabNavigator();
 
@@ -42,7 +42,7 @@ const TabNavigator = ({
               {...props}
               theme={theme}
               favouriteChange={favouriteChange}
-              setFavouriteChange={setFavouriteChange}
+              blockChange={blockChange}
             />
           )}
         </Tab.Screen>

@@ -15,8 +15,11 @@ import TimeAgo from "react-native-timeago";
 import { useNavigation } from "@react-navigation/core";
 import { StarIcon } from "react-native-heroicons/solid";
 import { getFavourites } from "../utils/getFavourites";
+import { getBlockedList } from "../utils/getBlockedList";
+import { getChatId } from "../utils/getChatId";
+import { NoSymbolIcon } from "react-native-heroicons/solid";
 
-const ContactsScreen = ({ theme, favouriteChange, setFavouriteChange }) => {
+const ContactsScreen = ({ theme, favouriteChange }) => {
   const [data1, setData1] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [input, setInput] = useState("");
@@ -33,6 +36,15 @@ const ContactsScreen = ({ theme, favouriteChange, setFavouriteChange }) => {
     getFriendsEmails(loggedInUserEmail).then((friendEmails) => {
       getFriendsData(friendEmails).then((data) => {
         let tempArray = data.map((item) => {
+          let blocked;
+          // retrieve the chat Id and get blocked list
+          getChatId(loggedInUserEmail, item.email).then((data) => {
+            // get the blocked list
+            getBlockedList(data).then((data) => {
+              blocked = data;
+              console.log(blocked);
+            });
+          });
           return {
             value: item.displayName,
             key: item.displayName,
@@ -40,8 +52,10 @@ const ContactsScreen = ({ theme, favouriteChange, setFavouriteChange }) => {
             lastSeen: item.lastSeen,
             photoURL: item.photoURL,
             status: item.status,
+            blocked: blocked,
           };
         });
+
         setData1(tempArray);
       });
 
@@ -137,8 +151,16 @@ const ContactsScreen = ({ theme, favouriteChange, setFavouriteChange }) => {
               </View>
               {/* if this friend is a favourite, display a star */}
               {favourites?.[item.value] ? (
-                <View style={tw`p-1.2 mb-auto mt-auto ml-20`}>
+                <View style={tw`p-1.2 mb-auto mt-auto ml-12`}>
                   <StarIcon size={22} color="#FDDA0D" />
+                </View>
+              ) : (
+                <></>
+              )}
+
+              {item.blocked?.[item.email] ? (
+                <View style={tw`p-1.2 mb-auto mt-auto ml-20`}>
+                  <NoSymbolIcon size={22} color="red" />
                 </View>
               ) : (
                 <></>

@@ -1,6 +1,6 @@
 import { db } from "../firebase";
 
-export const getUserName = async (loggedInUserEmail, friendEmail) => {
+export const getChatId = async (loggedInUserEmail, friendEmail) => {
   let chatId = "";
   // get a chat collection snapchat from firebase
   await db
