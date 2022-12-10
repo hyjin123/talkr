@@ -48,7 +48,7 @@ const ChatScreen = ({ route, navigation, theme }) => {
 
   // get all the friend information - need their last active status through this
   const [friendSnapshot] = useCollection(
-    db.collection("users").where("email", "==", friendEmail[0])
+    db.collection("users").where("email", "==", friendEmail)
   );
 
   const friend = friendSnapshot?.docs?.[0]?.data();

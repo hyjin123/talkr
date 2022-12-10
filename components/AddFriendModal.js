@@ -22,8 +22,6 @@ const AddFriendModal = ({ modalVisible, setModalVisible, theme }) => {
     db.collection("users").where("email", "==", addedEmail)
   );
 
-  // console.log("this is the users snapshot", usersSnapshot?.docs?.length);
-
   // check to see if the chat collection already exists in the database
   const doesChatExist = (addedEmail) => {
     return !!chatsSnapshot?.docs.find(
@@ -81,7 +79,7 @@ const AddFriendModal = ({ modalVisible, setModalVisible, theme }) => {
           onPress={creatChat}
           style={tw`bg-[${theme?.primary[0]}] font-bold rounded-full px-15 py-2 mt-6`}
         >
-          <Text style={tw`text-black`}>ADD</Text>
+          <Text style={tw`text-black`}>Add</Text>
         </TouchableOpacity>
       </View>
     </Modal>

@@ -1,9 +1,8 @@
 import { View, Text } from "react-native";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import tw from "twrnc";
 import moment from "moment";
 import { LinearGradient } from "expo-linear-gradient";
-import { db } from "../firebase";
 
 const Messages = ({ user, message, loggedInUserEmail, theme }) => {
   // determine whether the message is from YOU or YOUR FRIEND
