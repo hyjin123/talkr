@@ -24,7 +24,7 @@ talkr is a react native project that aims to connect friends and family. It prov
 
 Users can register and log-in.
 
-<!-- !["Register and Log-In Page"](https://github.com/hyjin123/food-pickup-ordering/blob/master/docs/Backstore-Page.png?raw=true) -->
+<!-- !["Register and Log-In Page"](https://github.com/hyjin123/talkr/blob/master/docs/Register.PNG?raw=true) -->
 
 ### Home Page
 
