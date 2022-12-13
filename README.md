@@ -18,7 +18,7 @@ talkr is a react native project that aims to connect friends and family. It prov
 
 ### Get Started Page
 
-!["Get Started Page"](https://github.com/hyjin123/talkr/blob/master/docs/GetStarted.png?raw=true)
+!["Get Started Page"](https://github.com/hyjin123/talkr/blob/master/docs/Register.png?raw=true)
 
 ### Register and Log-In Page
 
