@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState } from "react";
 import tw from "twrnc";
@@ -23,6 +24,14 @@ import { useEffect } from "react";
 const HomeScreen = ({ theme }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [signoutModalVisible, setSignoutModalVisible] = useState(false);
+  const [isFetching, setIsFetching] = useState(true);
+
+  // give 4 seconds until all the data is loaded and component renders
+  useEffect(() => {
+    setTimeout(() => {
+      setIsFetching(false);
+    }, 4000);
+  }, []);
 
   const navigation = useNavigation();
 
@@ -56,6 +65,16 @@ const HomeScreen = ({ theme }) => {
     db.collection("chats").where("users", "array-contains", loggedInUserEmail)
   );
 
+  if (isFetching) {
+    return (
+      <View>
+        <ActivityIndicator />
+        <ActivityIndicator size="large" />
+        <ActivityIndicator size="small" color="#0000ff" />
+        <ActivityIndicator size="large" color="#00ff00" />
+      </View>
+    );
+  }
   return (
     <>
       {/* this SafeAreaView is set so that the top of the screen's background remains white */}
