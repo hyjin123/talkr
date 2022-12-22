@@ -7,7 +7,6 @@ import { LinearGradient } from "expo-linear-gradient";
 const Messages = ({ user, message, loggedInUserEmail, theme }) => {
   // determine whether the message is from YOU or YOUR FRIEND
   const messageType = user === loggedInUserEmail ? "sender" : "friend";
-
   return (
     <View>
       {messageType === "sender" ? (

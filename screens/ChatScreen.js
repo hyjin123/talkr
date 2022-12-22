@@ -21,6 +21,7 @@ import { useCollection } from "react-firebase-hooks/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import firebase from "firebase";
 import Messages from "../components/Messages";
+import Day from "../components/Day";
 import TimeAgo from "react-native-timeago";
 import { getBlockedList } from "../utils/getBlockedList";
 import { getChatId } from "../utils/getChatId";
@@ -72,20 +73,55 @@ const ChatScreen = ({ route, navigation, theme }) => {
     });
   }, []);
 
+  console.log(
+    messagesSnapshot?.docs[0].data().timestamp.toDate().toString().slice(0, 15)
+  );
   // showing all the messages
   const showMessages = () => {
     if (messagesSnapshot) {
-      return messagesSnapshot.docs.map((message) => (
-        <Messages
-          key={message.id}
-          user={message.data().user}
-          message={{
-            ...message.data(),
-            timestamp: message.data().timestamp?.toDate().getTime(),
-          }}
-          loggedInUserEmail={loggedInUserEmail}
-          theme={theme}
-        />
+      return messagesSnapshot.docs.map((message, index, array) => (
+        <View key={index}>
+          {index === 0 && (
+            <Day
+              message={{
+                ...message.data(),
+                timestamp: message.data().timestamp?.toDate().getTime(),
+              }}
+            />
+          )}
+          {index !== 0 &&
+            message.data().timestamp.toDate().toString().slice(0, 15) ===
+              array[index - 1]
+                ?.data()
+                .timestamp.toDate()
+                .toString()
+                .slice(0, 15) && <></>}
+
+          {index !== 0 &&
+            message.data().timestamp.toDate().toString().slice(0, 15) !==
+              array[index - 1]
+                ?.data()
+                .timestamp.toDate()
+                .toString()
+                .slice(0, 15) && (
+              <Day
+                message={{
+                  ...message.data(),
+                  timestamp: message.data().timestamp?.toDate().getTime(),
+                }}
+              />
+            )}
+
+          <Messages
+            user={message.data().user}
+            message={{
+              ...message.data(),
+              timestamp: message.data().timestamp?.toDate().getTime(),
+            }}
+            loggedInUserEmail={loggedInUserEmail}
+            theme={theme}
+          />
+        </View>
       ));
     }
   };
