@@ -177,7 +177,7 @@ const ChatPreview = ({ id, users, loggedInUserEmail, theme }) => {
                     <UserIcon color="black" />
                   )}
                 </View>
-                <View style={tw`flex-1 ml-4`}>
+                <View style={tw`flex-1 ml-4 mr-5`}>
                   {friendName ? (
                     <Text style={tw`text-lg font-bold pb-1`}>{friendName}</Text>
                   ) : (
@@ -185,12 +185,14 @@ const ChatPreview = ({ id, users, loggedInUserEmail, theme }) => {
                       {friendEmail}
                     </Text>
                   )}
-                  {latestMessage?.message ? (
+                  {latestMessage?.message.length > 60 ? (
+                    <Text style={tw`font-light text-xs`}>
+                      {latestMessage?.message.slice(0, 60)}...
+                    </Text>
+                  ) : (
                     <Text style={tw`font-light text-xs`}>
                       {latestMessage?.message}
                     </Text>
-                  ) : (
-                    <Text style={tw`font-light text-xs`}>No messages</Text>
                   )}
                 </View>
                 <View style={tw`mr-4 justify-center items-center`}>
