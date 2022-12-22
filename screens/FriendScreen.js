@@ -225,7 +225,7 @@ const FriendScreen = ({
             <TouchableOpacity
               onPress={() =>
                 navigation.navigate("Chat", {
-                  id,
+                  id: chatId,
                   friendAvatar,
                   friendName,
                   friendEmail,
