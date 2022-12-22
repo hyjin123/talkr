@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import HomeScreen from "../screens/HomeScreen";
+import { View, ActivityIndicator } from "react-native";
 import LoginScreen from "../screens/LoginScreen";
 import GetStarted from "../screens/GetStarted";
 import ChatScreen from "../screens/ChatScreen";

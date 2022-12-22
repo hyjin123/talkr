@@ -26,13 +26,6 @@ const HomeScreen = ({ theme }) => {
   const [signoutModalVisible, setSignoutModalVisible] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
 
-  // give 4 seconds until all the data is loaded and component renders
-  useEffect(() => {
-    setTimeout(() => {
-      setIsFetching(false);
-    }, 4000);
-  }, []);
-
   const navigation = useNavigation();
 
   // get the logged in user id through auth
@@ -65,16 +58,20 @@ const HomeScreen = ({ theme }) => {
     db.collection("chats").where("users", "array-contains", loggedInUserEmail)
   );
 
+  useEffect(() => {
+    setTimeout(() => {
+      setIsFetching(false);
+    }, 4000);
+  }, []);
+
   if (isFetching) {
     return (
-      <View>
-        <ActivityIndicator />
-        <ActivityIndicator size="large" />
-        <ActivityIndicator size="small" color="#0000ff" />
-        <ActivityIndicator size="large" color="#00ff00" />
+      <View style={tw`flex-1 justify-center items-center`}>
+        <ActivityIndicator size="large" color={theme.primary[0]} />
       </View>
     );
   }
+
   return (
     <>
       {/* this SafeAreaView is set so that the top of the screen's background remains white */}

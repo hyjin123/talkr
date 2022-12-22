@@ -1,5 +1,11 @@
-import { View, Text, TouchableOpacity, SafeAreaView } from "react-native";
-import React from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  SafeAreaView,
+  ActivityIndicator,
+} from "react-native";
+import React, { useState, useEffect } from "react";
 import {
   HomeIcon,
   Cog6ToothIcon,
@@ -10,9 +16,21 @@ import {
   Cog6ToothIcon as Cog6ToothIconSolid,
   UsersIcon as UsersIconSolid,
 } from "react-native-heroicons/solid";
-import tw from "twrnc";
 
 const MyTabBar = ({ state, descriptors, navigation, theme }) => {
+  const [isFetching, setIsFetching] = useState(true);
+
+  // don't show the tab navigation until all the home screen data is loaded
+  useEffect(() => {
+    setTimeout(() => {
+      setIsFetching(false);
+    }, 4000);
+  }, []);
+
+  if (isFetching) {
+    return <></>;
+  }
+
   return (
     <SafeAreaView
       style={{
