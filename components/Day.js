@@ -11,7 +11,7 @@ const Day = ({ message }) => {
       />
       <Text style={tw`text-xs font-light text-gray-600 mx-2`}>
         {message.timestamp
-          ? moment(message.timestamp).format("MMM d, YYYY")
+          ? moment(message.timestamp).format("MMM DD, YYYY")
           : "..."}
       </Text>
       <View

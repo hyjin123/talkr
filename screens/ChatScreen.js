@@ -73,44 +73,30 @@ const ChatScreen = ({ route, navigation, theme }) => {
     });
   }, []);
 
-  console.log(
-    messagesSnapshot?.docs[0].data().timestamp.toDate().toString().slice(0, 15)
-  );
   // showing all the messages
   const showMessages = () => {
     if (messagesSnapshot) {
       return messagesSnapshot.docs.map((message, index, array) => (
         <View key={index}>
-          {index === 0 && (
+          {/* if same date as the previous message, do not show date */}
+
+          {(index !== 0 &&
+            message.data().timestamp?.toDate().toString().slice(0, 15) !==
+              array[index - 1]
+                ?.data()
+                .timestamp?.toDate()
+                .toString()
+                .slice(0, 15)) ||
+          index === 0 ? (
             <Day
               message={{
                 ...message.data(),
                 timestamp: message.data().timestamp?.toDate().getTime(),
               }}
             />
+          ) : (
+            <></>
           )}
-          {index !== 0 &&
-            message.data().timestamp.toDate().toString().slice(0, 15) ===
-              array[index - 1]
-                ?.data()
-                .timestamp.toDate()
-                .toString()
-                .slice(0, 15) && <></>}
-
-          {index !== 0 &&
-            message.data().timestamp.toDate().toString().slice(0, 15) !==
-              array[index - 1]
-                ?.data()
-                .timestamp.toDate()
-                .toString()
-                .slice(0, 15) && (
-              <Day
-                message={{
-                  ...message.data(),
-                  timestamp: message.data().timestamp?.toDate().getTime(),
-                }}
-              />
-            )}
 
           <Messages
             user={message.data().user}
